@@ -2,7 +2,9 @@
 
 ## TODO List
 
-- [ ] 技术选型
+- [x] 技术选型
+- [x] 前端demo
+- [ ] 后端api
 
 ## 附录
 - [React官方文档](https://zh-hans.reactjs.org/docs/getting-started.html)
