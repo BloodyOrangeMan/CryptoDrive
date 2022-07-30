@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
+import axios from 'axios';
 
 require('dotenv').config();
 
@@ -16,8 +17,10 @@ const Register = () => {
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [passwordConfirm, setpasswordConfirm] = useState('');
 	const [isValidated, setIsValidated] = useState(false);
 	const [isClicked, setIsclicked] = useState(false);
+	const [warning,setWarning] = useState('');
 
 	// functions
 	const useStyles = makeStyles((theme) => ({
@@ -35,49 +38,53 @@ const Register = () => {
 			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		// password regex
 		const passwordRegex =
-			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/;
 
-		const nameRegex = /^[a-z ,.'-]+$/i;
+		const nameRegex = /^[a-zA-Z0-9_-]{4,16}$/;
 
-		if (
-			emailRegex.test(email) &&
-			passwordRegex.test(password) &&
-			nameRegex.test(name)
-		) {
+		// if (
+		// 	emailRegex.test(email) &&
+		// 	passwordRegex.test(password) &&
+		// 	nameRegex.test(name)
+		// ) {
+		// 	setIsValidated(true);
+		// 	postRegister(e, email, password);
+		// } else {
+		// 	setIsValidated(false);
+		// }
+
+		if (!nameRegex.test(name)) {
+			setIsValidated(false);
+			setWarning('Username must be 4 to 16 characters (letters, numbers, underscores, minus signs)!')
+		} else if(!emailRegex.test(email)) {
+			setIsValidated(false);
+			setWarning('Incorrect email format!')
+		} else if (!passwordRegex.test(password)) {
+			setIsValidated(false);
+			setWarning('Password should be 8 to 10 characters, at least one uppercase letter, one lowercase letter, one number and one special character!')
+		} else {
 			setIsValidated(true);
 			postRegister(e, email, password);
-		} else {
-			setIsValidated(false);
 		}
 		setIsclicked(true);
 	};
 
 	const postRegister = (e) => {
 		e.preventDefault();
-		const data = {
-			username: name,
+		axios.post('/api/signup',{
+			name: name,
 			email: email,
 			password: password,
-		};
-		fetch(`${process.env.REACT_APP_IP}/register`, {
-			method: 'POST',
-			withCredentials: true,
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				if (data.success) {
-					setIsValidated(true);
-					history.push('/login');
-				} else {
-					setIsValidated(false);
-				}
-			})
-			.catch((err) => console.log(err));
+			passwordConfirm: passwordConfirm
+		}).then(res =>{
+			console.log(res.status)
+			if (res.status === 201) {
+				setIsValidated(true);
+				history.push('/login');
+			} else {
+				setIsValidated(false);
+			}
+		}).catch((err) => console.log(err));
 	};
 	return (
 		<div className="login-container">
@@ -142,6 +149,26 @@ const Register = () => {
 						setPassword(e.target.value);
 					}}
 				/>
+				<TextField
+					id="outlined-full-width"
+					type="password"
+					label="PasswordConfirm"
+					style={{ margin: 8 }}
+					{...(!isValidated && isClicked ? { error: true } : {})}
+					placeholder="PasswordConfirm"
+					fullWidth
+					margin="normal"
+					InputLabelProps={{
+						shrink: true,
+					}}
+					autoComplete="off"
+					variant="outlined"
+					onChange={(e) => {
+						setpasswordConfirm(e.target.value);
+					}}
+				/>
+
+				<p className='warning'>{warning}</p>
 
 				<div className="links-div">
 					<a href="/login" className="forgot-password">
@@ -159,6 +186,7 @@ const Register = () => {
 				>
 					Register
 				</Button>
+				
 			</form>
 		</div>
 	);

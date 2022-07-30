@@ -3,32 +3,43 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
+import axios from 'axios';
 
 require('dotenv').config();
 
 const Login = () => {
 	const history = useHistory();
+	
 
 	// useEffect
 	useEffect(() => {
 		document.title = 'Login - Drive Clone';
 
 		// get request with fetch
-		fetch(`${process.env.REACT_APP_IP}/is-logged`, {
-			method: 'GET',
-			withCredentials: true,
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				if (data.success) {
-					history.push('/');
-				}
-			})
-			.catch((err) => console.log(err));
+		// fetch(`/api/isLoggedIn/`, {
+		// 	method: 'GET',
+		// 	withCredentials: true,
+		// 	credentials: 'include',
+		// 	headers: {
+		// 		'Content-Type': 'application/json',
+		// 	},
+		// })
+		// 	.then((res) => res.json())
+		// 	.then((data) => {
+		// 		if (data.success) {
+		// 			history.push('/');
+		// 		}
+		// 	})
+		// 	.catch((err) => console.log(err));
+
+		axios.get('/api/isLoggedIn', {
+			withCredentials: true
+		}).then(res => {
+			if (res.status === 200) {
+				history.push('/');
+			}
+		}).catch((err) => console.log(err));
+
 	}, [history]);
 
 	// state Variables
@@ -49,11 +60,12 @@ const Login = () => {
 		e.preventDefault();
 
 		// Username regex
-		const nameRegex = /^[a-z ,.'-]+$/i;
-
-		// Password Regex
+		// password regex
 		const passwordRegex =
-			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/;
+
+		const nameRegex = /^[a-zA-Z0-9_-]{4,16}$/;
+
 
 		if (nameRegex.test(name) && passwordRegex.test(password)) {
 			setIsValidated(true);
@@ -68,28 +80,34 @@ const Login = () => {
 	};
 
 	const postLogin = (name, password) => {
-		const data = {
-			username: name,
-			password: password,
-		};
-		fetch(`${process.env.REACT_APP_IP}/login`, {
-			method: 'POST',
-			withCredentials: true,
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data),
+		// fetch(`${process.env.REACT_APP_IP}/login`, {
+		// 	method: 'POST',
+		// 	withCredentials: true,
+		// 	credentials: 'include',
+		// 	headers: {
+		// 		'Content-Type': 'application/json',
+		// 	},
+		// 	body: JSON.stringify(data),
+		// })
+		// 	.then((res) => res.json())
+		// 	.then((data) => {
+		// 		if (data.success) {
+		// 			history.push('/');
+		// 		} else {
+		// 			setIsValidated(false);
+		// 		}
+		// 	})
+		// 	.catch((err) => console.log(err));
+		axios.post('/api/login',{
+			name: name,
+			password: password
+		}).then(res => {
+			if (res.status === 200) {
+				history.push('/');
+			} else {
+				setIsValidated(false);
+			}
 		})
-			.then((res) => res.json())
-			.then((data) => {
-				if (data.success) {
-					history.push('/');
-				} else {
-					setIsValidated(false);
-				}
-			})
-			.catch((err) => console.log(err));
 	};
 
 	return (

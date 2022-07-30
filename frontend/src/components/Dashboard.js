@@ -3,6 +3,7 @@ import SideBar from './SideBar';
 import Main from './Main';
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
+import axios from 'axios';
 
 require('dotenv').config();
 
@@ -15,28 +16,42 @@ const Dashboard = () => {
 	// API GET Request for is-logged
 	useEffect(() => {
 		document.title = 'Drive Clone';
-		let url =
-		process.env.REACT_APP_IP + "/is-logged";
-		// get request with fetch
-		fetch(url, {
-			method: 'GET',
-			withCredentials: true,
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				if (!data.success) {
-					setIsLoggedIn(false);
-					history.push('/login');
-				} else {
-					setIsLoggedIn(true);
-					setUserName(data.user);
-				}
-			})
-			.catch((err) => console.log(err));
+		// let url =
+		// process.env.REACT_APP_IP + "/is-logged";
+		// // get request with fetch
+		// fetch(url, {
+		// 	method: 'GET',
+		// 	withCredentials: true,
+		// 	credentials: 'include',
+		// 	headers: {
+		// 		'Content-Type': 'application/json',
+		// 	},
+		// })
+		// 	.then((res) => res.json())
+		// 	.then((data) => {
+		// 		if (!data.success) {
+		// 			setIsLoggedIn(false);
+		// 			history.push('/login');
+		// 		} else {
+		// 			setIsLoggedIn(true);
+		// 			setUserName(data.user);
+		// 		}
+		// 	})
+		// 	.catch((err) => console.log(err));
+
+		axios.get('/api/isLoggedIn', {
+			withCredentials: true
+		}).then(res => {
+			if (res.status === 200) {
+				setIsLoggedIn(true);
+				setUserName('demo');
+			} else {
+				setIsLoggedIn(false);
+				history.push('/login');
+			}
+		}).catch((err) => console.log(err));
+
+
 	}, [history]);
 
 	// State Variables
