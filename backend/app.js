@@ -8,7 +8,8 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 
-const authRouter = require('./routes/authRoutes')
+const authRouter = require('./routes/authRoutes');
+const fileRouter = require('./routes/fileRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
@@ -22,7 +23,7 @@ app.use(helmet());
 app.use(cors({
   origin : "http://localhost:3000",
   credentials: true,
-}))
+}));
 
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
@@ -52,7 +53,8 @@ app.use((req, res, next) => {
     next();
   });
 
-app.use('/api', authRouter);
+app.use('/api/', authRouter);
+app.use('/api/file', fileRouter);
 
 
 app.all('*', (req, res, next) => {

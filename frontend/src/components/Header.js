@@ -2,6 +2,7 @@ import { Avatar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router';
+import axios from 'axios';
 
 require('dotenv').config();
 
@@ -18,21 +19,27 @@ function Header({ userName, setIsLoggedIn }) {
 
 	const handleLogout = () => {
 		// Logout Post Request
-		fetch(`${process.env.REACT_APP_IP}/logout`, {
-			method: 'POST',
-			withCredentials: true,
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				if (data.success) {
-					history.push('/login');
-				}
-			})
-			.catch((err) => console.log(err));
+		// fetch(`/api/logout`, {
+		// 	method: 'POST',
+		// 	withCredentials: true,
+		// 	credentials: 'include',
+		// 	headers: {
+		// 		'Content-Type': 'application/json',
+		// 	},
+		// })
+		// 	.then((res) => res.json())
+		// 	.then((data) => {
+		// 		if (data.success) {
+		// 			history.push('/login');
+		// 		}
+		// 	})
+		// 	.catch((err) => console.log(err));
+		axios.get('/api/logout').then(res => {
+			if (res.status === 200) {
+				history.push('/login');
+			} 
+		}).catch((err) => console.log(err));
+		
 	};
 
 	const classes = useStyles();
