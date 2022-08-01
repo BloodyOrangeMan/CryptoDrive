@@ -131,8 +131,8 @@ const Main = ({ metaData, reRender, setReRender }) => {
 		<div className="file">
 			<div className="file-header">
 				<InsertDriveFileIcon />
-				<p className="file-name" title={metaData.filename}>
-					{metaData.filename}
+				<p className="file-name" title={metaData.fileName}>
+					{metaData.fileName}
 				</p>
 
 				<IconButton onClick={handleDownload}>
@@ -140,9 +140,9 @@ const Main = ({ metaData, reRender, setReRender }) => {
 				</IconButton>
 			</div>
 			<div className="file-info">
-				Created: {metaData.createdate} <br />
-				Last Modified: {metaData.lastmodified} <br />
-				File Size: {metaData.filesize} MB
+				Created: {metaData.createDate} <br />
+				Last Modified: {metaData.lastModified} <br />
+				File Size: {metaData.fileSize} MB
 				<br />
 				<br />
 			</div>
@@ -174,7 +174,7 @@ const Main = ({ metaData, reRender, setReRender }) => {
 							InputLabelProps={{
 								shrink: true,
 							}}
-							defaultValue={metaData.filename}
+							defaultValue={metaData.fileName}
 							onChange={(e) => {
 								setNewFileName(e.target.value);
 							}}

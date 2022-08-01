@@ -22,6 +22,7 @@ const style = {
 	p: 4,
 };
 
+
 const SideBar = ({
 	sideBarOption,
 	setSideBarOption,
@@ -92,21 +93,22 @@ const SideBar = ({
 
 	const handleUpload = (e) => {
 		var data = new FormData()
-		data.append('newFile', file)
-		data.append('filename', metaData.fileName)
+		
+		data.append('file', file)
+		
+		Object.entries(metaData).forEach(([key, value]) => {
+			data.append(key, value);
+		});
 
-		fetch(`${process.env.REACT_APP_IP}/uploadFile`, {
+		
+
+		fetch(`/api/file/upload`, {
 			method: 'POST',
 			withCredentials: true,
 			credentials: 'include',
 			body: data,
 		})
 			.then((res) => res.json())
-			.then((data) => {
-				if (data.success) {
-					uploadMetaData(metaData);
-				}
-			})
 			.catch((err) => console.log(err));
 
 		e.target.files = {};

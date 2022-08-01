@@ -17,7 +17,7 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
 
 	// Functions
 	const getFiles = () => {
-		fetch(`${process.env.REACT_APP_IP}/listBlobs`, {
+		fetch(`api/file/getall`, {
 			method: 'GET',
 			withCredentials: true,
 			credentials: 'include',
@@ -27,13 +27,14 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				if (data.success) {
-					if (data.blob_list.length > 0) {
-						setFiles(data.blob_list);
-					} else {
-						setFiles();
-					}
-				}
+				// if (data.success) {
+				// 	if (data.blob_list.length > 0) {
+				// 		setFiles(data.blob_list);
+				// 	} else {
+				// 		setFiles();
+				// 	}
+				// }
+				setFiles(data.files);
 			});
 	};
 
@@ -44,7 +45,7 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
 				{files ? (
 					files.map((file, i) => (
 						<File
-							metaData={file.metadata}
+							metaData={file.metadata.info}
 							reRender={reRender}
 							setReRender={setReRender}
 							key={i}

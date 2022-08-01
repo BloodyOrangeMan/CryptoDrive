@@ -3,12 +3,8 @@ const fileController = require('../controllers/fileController');
 const router = express.Router();
 
 
-router.post('/upload', fileController.upload.single('file'), (req,res) => {
-    console.log(req.body);
-    res.status(201).json({
-        status: 'success'
-      });
-});
+router.post('/upload', fileController.getToken,fileController.uploadFiles);
+router.get('/getall', fileController.getAll);
 
 
 module.exports = router;
