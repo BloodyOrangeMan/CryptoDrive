@@ -1,8 +1,14 @@
-# CryptoDrive
+<h1 align="center">
+    CryptoDrive
+</h1>
 
 ## TODO List
 
-- [ ] 技术选型
+- [x] 技术选型
+- [x] 前端demo
+- [ ] 后端API
+  - [x] 登录认证API demo
+  - [ ] 文件存储API demo 
 
 ## 附录
 - [React官方文档](https://zh-hans.reactjs.org/docs/getting-started.html)
