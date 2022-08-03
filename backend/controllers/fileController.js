@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const {GridFsStorage} = require('multer-gridfs-storage');
-const Grid = require('gridfs-stream');
 const path = require('path');
 const multer = require('multer');
 const crypto = require('crypto');
@@ -8,21 +7,22 @@ const util = require("util");
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const jwtDecoder = require('jwt-decode')
+const fs = require('fs');
 
 const DB = process.env.DATABASE_LOCAL;
 
 const conn = mongoose.createConnection(DB);
 
 // Init gfs
-let gfs;
+let gridfsBucket;
 
 let id;
 
 conn.once('open', () => {
-  // Init stream
-  gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection('uploads');
-});
+    gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
+    bucketName: 'uploads'
+  });
+})
 
 // Create storage engine
 const storage = new GridFsStorage({
@@ -88,7 +88,7 @@ exports.uploadFiles = catchAsync(async (req, res) => {
 });
 
 exports.getAll = catchAsync(async (req, res) => {
-  gfs.files.find().toArray((err, files) => {
+  gridfsBucket.find().toArray((err, files) => {
     // Check if files
     if (!files || files.length === 0) {
       res.status(404).json({
@@ -111,4 +111,27 @@ exports.getAll = catchAsync(async (req, res) => {
       })
     }
   });
+})
+
+exports.download = catchAsync(async (req, res) => {
+
+  console.log('ok');
+
+  const name = req.params.name;
+
+  let type;
+
+  await gridfsBucket.find({filename: name}).toArray((err, files) =>{
+    type = files[0].contentType;
+    res.set({
+      "Accept-Ranges": "bytes",
+      "Content-Disposition": `attachment; filename=${name}`,
+      "Content-Type": `${type}`
+    });;
+  });
+
+  const downloadStream = await gridfsBucket.openDownloadStreamByName(name);
+
+  downloadStream.pipe(res);
+
 })
