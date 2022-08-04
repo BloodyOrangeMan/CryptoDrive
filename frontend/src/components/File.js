@@ -10,6 +10,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import axios from 'axios';
 
 require('dotenv').config()
 
@@ -34,25 +35,19 @@ const Main = ({ metaData, reRender, setReRender }) => {
 
 	// HANDLE DELETE
 	const handleDelete = () => {
-		const data = {
-			filename: metaData.filename,
-		};
-
-		fetch(`${process.env.REACT_APP_IP}/deleteBlob`, {
+		const filename = metaData.fileName;
+		console.log(metaData);
+		fetch(`/api/file/delete/${filename}`, {
 			method: 'DELETE',
 			withCredentials: true,
 			credentials: 'include',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify(data),
 		})
-			.then((res) => res.json())
-			.then((data) => {
-				if (data.success) {
-					reRender ? setReRender(0) : setReRender(1);
-				}
-			})
+			.then((res) => {if (res.status === 200) {
+				reRender ? setReRender(0) : setReRender(1);
+			}})
 			.catch((err) => console.log(err));
 	};
 
