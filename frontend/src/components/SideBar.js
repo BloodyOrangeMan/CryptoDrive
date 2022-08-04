@@ -100,7 +100,6 @@ const SideBar = ({
 			data.append(key, value);
 		});
 
-		
 
 		fetch(`/api/file/upload`, {
 			method: 'POST',

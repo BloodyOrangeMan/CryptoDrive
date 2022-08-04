@@ -7,7 +7,7 @@ const util = require("util");
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const jwtDecoder = require('jwt-decode')
-const fs = require('fs');
+
 
 const DB = process.env.DATABASE_LOCAL;
 
@@ -16,7 +16,6 @@ const conn = mongoose.createConnection(DB);
 // Init gfs
 let gridfsBucket;
 
-let id;
 
 conn.once('open', () => {
     gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
@@ -33,6 +32,7 @@ const storage = new GridFsStorage({
         if (err) {
           return reject(err);
         }
+        const id =  jwtDecoder(req.cookies.jwt).id
         const filename = buf.toString('hex') + path.extname(file.originalname);
         const fileInfo = {
           filename: filename,
@@ -48,28 +48,7 @@ const storage = new GridFsStorage({
   }
 });
 
-
 const upload = util.promisify(multer({ storage }).single("file"));
-
-exports.getToken = catchAsync(async (req, res, next) => {
-  let token;
-  if (req.cookies.jwt) {
-    token = req.cookies.jwt;
-  }
-
-  if (!token) {
-    return next(
-      new AppError('You are not logged in! Please log in to get access.', 401)
-    );
-  }
-
-  id = jwtDecoder(token).id;
-
-  console.log(id);
-
-  next();
-
-});
 
 exports.uploadFiles = catchAsync(async (req, res) => {
   try {
@@ -88,23 +67,14 @@ exports.uploadFiles = catchAsync(async (req, res) => {
 });
 
 exports.getAll = catchAsync(async (req, res) => {
-  gridfsBucket.find().toArray((err, files) => {
+  const id = jwtDecoder(req.cookies.jwt).id
+  gridfsBucket.find({'metadata.id':id}).toArray((err, files) => {
     // Check if files
     if (!files || files.length === 0) {
       res.status(404).json({
         status: 'failed'
       })
     } else {
-      files.map(file => {
-        if (
-          file.contentType === 'image/jpeg' ||
-          file.contentType === 'image/png'
-        ) {
-          file.isImage = true;
-        } else {
-          file.isImage = false;
-        }
-      });
       res.status(200).json({
         status: 'success',
         files: files
@@ -113,25 +83,56 @@ exports.getAll = catchAsync(async (req, res) => {
   });
 })
 
-exports.download = catchAsync(async (req, res) => {
-
-  console.log('ok');
+exports.download = catchAsync(async (req, res, next) => {
 
   const name = req.params.name;
 
-  let type;
+  const id = jwtDecoder(req.cookies.jwt).id;
 
-  await gridfsBucket.find({filename: name}).toArray((err, files) =>{
-    type = files[0].contentType;
+  await gridfsBucket.find({'metadata.info.fileName': name})
+  .toArray((err, files) =>{
+    if (!files || files.length === 0) {
+     return next(new AppError('Not found!', 404));
+    }
+    if(files[0].metadata.id != id) {
+      new next(AppError('Permission denied!', 403));
+    }
+    const fileID = files[0]._id;
+    const type = files[0].contentType;
     res.set({
       "Accept-Ranges": "bytes",
       "Content-Disposition": `attachment; filename=${name}`,
       "Content-Type": `${type}`
-    });;
+    });
+
+    downloadStream = gridfsBucket.openDownloadStream(fileID);
+    downloadStream.pipe(res);
   });
 
-  const downloadStream = await gridfsBucket.openDownloadStreamByName(name);
+})
 
-  downloadStream.pipe(res);
+exports.delete = catchAsync(async (req, res, next) => {
+  
+  const name = req.params.name;
+
+  const id = await jwtDecoder(req.cookies.jwt).id;
+
+  await gridfsBucket.find({'metadata.info.fileName': name})
+  .toArray((err, files) =>{
+    if (!files || files.length === 0) {
+      return next(new AppError('Not found!', 404));
+    }
+    if(files[0].metadata.id != id) {
+      console.log(files[0].metadata.id);
+      console.log(id);
+      return new next(new AppError('Permission denied!', 403));
+    }
+    
+    const fileID = files[0]._id;
+    
+    gridfsBucket.delete(fileID);
+
+    res.status(200).json({ status: 'success' });
+  });
 
 })

@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post('/login', authController.login);
 router.post('/signup', authController.signup);
-router.get('/isLoggedIn', authController.protect);
+router.get('/isLoggedIn', authController.isLoggedIn);
 router.get('/logout', authController.logout);
 
 
