@@ -6,7 +6,9 @@ const crypto = require('crypto');
 const util = require("util");
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
-const jwtDecoder = require('jwt-decode')
+const jwtDecoder = require('jwt-decode');
+const fs = require('fs');
+var stream = require('stream');
 
 
 const DB = process.env.DATABASE_LOCAL;
@@ -23,48 +25,75 @@ conn.once('open', () => {
   });
 })
 
-// Create storage engine
-const storage = new GridFsStorage({
-  url: DB,
-  file: (req, file) => {
-    return new Promise((resolve, reject) => {
-      crypto.randomBytes(16, (err, buf) => {
-        if (err) {
-          return reject(err);
-        }
-        const id =  jwtDecoder(req.cookies.jwt).id
-        const filename = buf.toString('hex') + path.extname(file.originalname);
-        const fileInfo = {
-          filename: filename,
-          bucketName: 'uploads',
-          metadata: {
-            id:id,
-            info:req.body
-          }
-        };
-        resolve(fileInfo);
-      });
-    });
-  }
-});
+// // Create storage engine
+// const storage = new GridFsStorage({
+//   url: DB,
+//   file: (req, file) => {
+//     return new Promise((resolve, reject) => {
+//       crypto.randomBytes(16, (err, buf) => {
+//         if (err) {
+//           return reject(err);
+//         }
+//         // fs.createWriteStream('/public/test.txt').write(file.buffer);
+//         const id =  jwtDecoder(req.cookies.jwt).id
+//         const filename = buf.toString('hex') + path.extname(file.originalname);
+//         const fileInfo = {
+//           filename: filename,
+//           bucketName: 'uploads',
+//           metadata: {
+//             id:id,
+//             info:req.body
+//           }
+//         };
+//         resolve(fileInfo);
+//       });
+//     });
+//   }
+// });
 
-const upload = util.promisify(multer({ storage }).single("file"));
+exports.uploadFiles = catchAsync(async (req, res, next) => {
 
-exports.uploadFiles = catchAsync(async (req, res) => {
-  try {
-    await upload(req, res);
-    if (req.file == undefined)  {
-      return new AppError('Please provide a file!', 400);
+    if (req.files == null)  {
+      return next(new AppError('Please provide a file!', 400));
     }
-    res.status(201).json({
-      status: 'success'
-    });
+  
+    const {name, data, size, mimetype, md5} = req.files.file;
+    const id =  jwtDecoder(req.cookies.jwt).id
 
-  } catch (error) {
-    console.log(error);
-    return new AppError('Oops, Something went wrong!', 400);
-  }
-});
+    console.log(req.body);
+  
+    const bufferStream = new stream.PassThrough();
+    bufferStream.end(data);
+    bufferStream.pipe(gridfsBucket.openUploadStream(name, {
+      chunkSizeBytes: size,
+      contentType:mimetype,
+      metadata: {
+        id,
+        md5,
+        info:req.body
+      }
+    }));
+
+    res.status(200).json({ status: 'success' });
+})
+
+// const upload = util.promisify(multer({ storage }).single("file"));
+
+// exports.uploadFiles = catchAsync(async (req, res) => {
+//   try {
+//     await upload(req, res);
+//     if (req.file == undefined)  {
+//       return new AppError('Please provide a file!', 400);
+//     }
+//     res.status(201).json({
+//       status: 'success'
+//     });
+
+//   } catch (error) {
+//     console.log(error);
+//     return new AppError('Oops, Something went wrong!', 400);
+//   }
+// });
 
 exports.getAll = catchAsync(async (req, res) => {
   const id = jwtDecoder(req.cookies.jwt).id

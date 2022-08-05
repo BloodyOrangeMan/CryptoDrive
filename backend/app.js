@@ -6,6 +6,8 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const fileUpload = require('express-fileupload');
+
 
 
 const authRouter = require('./routes/authRoutes');
@@ -30,6 +32,7 @@ if (process.env.NODE_ENV === 'development') {
   }
 
 app.use(express.json());
+app.use(fileUpload());
  // app.use(express.static(`${__dirname}/public`));
 
 // Limit requests from same API
