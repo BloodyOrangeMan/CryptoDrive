@@ -73,6 +73,7 @@
 - [MongoDB文档](https://www.mongodb.com/docs/)
 - [Mongoose文档](https://mongoosejs.com/docs/api.html)
 - [Express.js文档](https://expressjs.com/en/api.html)
+- [Libsodium文档](https://doc.libsodium.org/)
 
 #### 课程类
 - [全栈开发课](https://fullstackopen.com/zh/)
