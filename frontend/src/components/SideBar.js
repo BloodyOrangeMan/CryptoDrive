@@ -101,7 +101,7 @@ const SideBar = ({
 		});
 
 
-		fetch(`/api/file/upload`, {
+		fetch(`/api/file/`, {
 			method: 'POST',
 			withCredentials: true,
 			credentials: 'include',

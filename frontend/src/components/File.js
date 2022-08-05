@@ -37,7 +37,7 @@ const Main = ({ metaData, reRender, setReRender }) => {
 	const handleDelete = () => {
 		const filename = metaData.fileName;
 		console.log(metaData);
-		fetch(`/api/file/delete/${filename}`, {
+		fetch(`/api/file/${filename}`, {
 			method: 'DELETE',
 			withCredentials: true,
 			credentials: 'include',

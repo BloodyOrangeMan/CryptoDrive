@@ -17,7 +17,7 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
 
 	// Functions
 	const getFiles = () => {
-		fetch(`api/file/getall`, {
+		fetch(`api/file/`, {
 			method: 'GET',
 			withCredentials: true,
 			credentials: 'include',
