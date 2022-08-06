@@ -1,15 +1,11 @@
 const mongoose = require('mongoose');
-const {GridFsStorage} = require('multer-gridfs-storage');
-const path = require('path');
-const multer = require('multer');
-const crypto = require('crypto');
-const util = require("util");
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const jwtDecoder = require('jwt-decode');
-const fs = require('fs');
-var stream = require('stream');
+const stream = require('stream');
+const {fromBuffer} = require('file-type');
 
+const whiteList = process.env.WHITELIST_TYPE.split(", ");
 
 const DB = process.env.DATABASE_LOCAL;
 
@@ -25,45 +21,28 @@ conn.once('open', () => {
   });
 })
 
-// // Create storage engine
-// const storage = new GridFsStorage({
-//   url: DB,
-//   file: (req, file) => {
-//     return new Promise((resolve, reject) => {
-//       crypto.randomBytes(16, (err, buf) => {
-//         if (err) {
-//           return reject(err);
-//         }
-//         // fs.createWriteStream('/public/test.txt').write(file.buffer);
-//         const id =  jwtDecoder(req.cookies.jwt).id
-//         const filename = buf.toString('hex') + path.extname(file.originalname);
-//         const fileInfo = {
-//           filename: filename,
-//           bucketName: 'uploads',
-//           metadata: {
-//             id:id,
-//             info:req.body
-//           }
-//         };
-//         resolve(fileInfo);
-//       });
-//     });
-//   }
-// });
+exports.checkType = catchAsync(async (req, res, next) => {
+  
+  const fileTypeFromBuffer = await fromBuffer(req.files.file.data);
+  if (req.files == null)  {
+    return next(new AppError('Please provide a file!', 400));
+  }
+  if (!whiteList.includes(fileTypeFromBuffer.mime)) {
+    return next(new AppError('File type not allowed', 415));
+  };
+
+  next();
+})
 
 exports.uploadFiles = catchAsync(async (req, res, next) => {
-
-    if (req.files == null)  {
-      return next(new AppError('Please provide a file!', 400));
-    }
-  
+    
     const {name, data, size, mimetype, md5} = req.files.file;
     const id =  jwtDecoder(req.cookies.jwt).id
-
-    console.log(req.body);
   
     const bufferStream = new stream.PassThrough();
     bufferStream.end(data);
+    //TODO ENCRYPT
+
     bufferStream.pipe(gridfsBucket.openUploadStream(name, {
       chunkSizeBytes: size,
       contentType:mimetype,
@@ -77,23 +56,6 @@ exports.uploadFiles = catchAsync(async (req, res, next) => {
     res.status(200).json({ status: 'success' });
 })
 
-// const upload = util.promisify(multer({ storage }).single("file"));
-
-// exports.uploadFiles = catchAsync(async (req, res) => {
-//   try {
-//     await upload(req, res);
-//     if (req.file == undefined)  {
-//       return new AppError('Please provide a file!', 400);
-//     }
-//     res.status(201).json({
-//       status: 'success'
-//     });
-
-//   } catch (error) {
-//     console.log(error);
-//     return new AppError('Oops, Something went wrong!', 400);
-//   }
-// });
 
 exports.getAll = catchAsync(async (req, res) => {
   const id = jwtDecoder(req.cookies.jwt).id
@@ -135,6 +97,8 @@ exports.download = catchAsync(async (req, res, next) => {
     });
 
     downloadStream = gridfsBucket.openDownloadStream(fileID);
+    
+
     downloadStream.pipe(res);
   });
 

@@ -6,7 +6,7 @@ const router = express.Router();
 
 router
     .route('/')
-    .post(authController.protect, fileController.uploadFiles)
+    .post(authController.protect, fileController.checkType, fileController.uploadFiles)
     .get(authController.protect, fileController.getAll);
 
 router
