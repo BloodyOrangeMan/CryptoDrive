@@ -20,6 +20,7 @@
     "express-fileupload": "^1.4.0",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.5.1",
+    "file-type": "^16.5.3",
     "gridfs-stream": "^1.1.1",
     "helmet": "^5.1.1",
     "hpp": "^0.2.3",

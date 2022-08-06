@@ -32,8 +32,13 @@ if (process.env.NODE_ENV === 'development') {
   }
 
 app.use(express.json());
-app.use(fileUpload());
- // app.use(express.static(`${__dirname}/public`));
+app.use(fileUpload({
+  limits: {
+      fileSize: 10000000 //10MB
+  },
+  abortOnLimit: true
+}));
+// app.use(express.static(`${__dirname}/public`));
 
 // Limit requests from same API
 const limiter = rateLimit({
