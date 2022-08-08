@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useHistory } from 'react-router';
+
 
 import { TextField } from '@material-ui/core';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
@@ -32,6 +34,8 @@ const Main = ({ metaData, reRender, setReRender }) => {
 
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
+
+	const history = useHistory();
 
 	// HANDLE DELETE
 	const handleDelete = () => {
@@ -84,42 +88,21 @@ const Main = ({ metaData, reRender, setReRender }) => {
 
 	// HANDLE DOWNLOAD
 	const handleDownload = () => {
-		const data = {
-			filename: metaData.filename,
-		};
+		const filename = metaData.fileName;
 
-		fetch(`${process.env.REACT_APP_IP}/getSASUrl`, {
-			method: 'POST',
+		// history.push(`/api/file/${filename}`);
+
+		fetch(`/api/file/${filename}`, {
+			method: 'GET',
 			withCredentials: true,
 			credentials: 'include',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify(data),
 		})
-			.then((res) => res.json())
-			.then((data) => {
-				if (data.success) {
-					const a = document.createElement('a');
-					a.style.display = 'none';
-					document.body.appendChild(a);
-
-					// a.href = URL.createObjectURL(blobFile);
-					a.href = data.url;
-
-					// Use download attribute to set set desired file name
-					a.setAttribute('download', metaData.filename);
-
-					// Trigger the download by simulating click
-					a.click();
-
-					// Cleanup
-					window.URL.revokeObjectURL(a.href);
-					document.body.removeChild(a);
-
-					// getFile(data.url);
-				}
-			})
+			.then((res) => {if (res.status === 200) {
+				console.log(res);
+			}})
 			.catch((err) => console.log(err));
 	};
 	return (
