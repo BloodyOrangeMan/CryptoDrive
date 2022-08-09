@@ -60,7 +60,7 @@ exports.genSignKeyPair = async (passphrase) => {
   };
 };
 
-exports.streamEncrypt = async (data, passphrase) => {
+exports.encryptStream = async (data, passphrase) => {
   if (!sodium) await onCache;
 
   const keyWithSalt = await initKey(
@@ -89,13 +89,11 @@ exports.streamEncrypt = async (data, passphrase) => {
   storageData.set(header, salt.length);
 
   storageData.set(encryptedData, salt.length + header.length);
-
-  console.log(salt, header, "en");
-
+  
   return storageData;
 };
 
-exports.streamDecrypt = async (data, passphrase) => {
+exports.decryptStream = async (data, passphrase) => {
   if (!sodium) await onCache;
 
   let offset = 0;
@@ -133,3 +131,25 @@ exports.streamDecrypt = async (data, passphrase) => {
 
   return decryptedStream.message;
 };
+
+exports.signStream = async (data, salt, passphrase) => {
+  if (!sodium) await onCache;
+  const saltBuffer = Buffer.from(salt, 'base64'); 
+  const seed = await genKey(saltBuffer, passphrase, sodium.crypto_sign_SEEDBYTES);
+
+  const keyPair = await sodium.crypto_sign_seed_keypair(seed);
+
+  const [pk, sk] = [keyPair.publicKey, keyPair.privateKey];
+  let sign = await sodium.crypto_sign(data, sk);
+
+  return sign;
+
+};
+
+exports.openSignStream = async (sign, pk) => {
+  if (!sodium) await onCache;
+  const publicKey = Buffer.from(pk, 'base64'); 
+  const raw = sodium.crypto_sign_open(sign, publicKey)
+
+  return raw;
+}

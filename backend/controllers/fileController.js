@@ -6,9 +6,10 @@ const jwtDecoder = require("jwt-decode");
 const stream = require("stream");
 const { fromBuffer } = require("file-type");
 
+const User = require("../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
-const { streamEncrypt, streamDecrypt } = require("./../utils/cryptoFeatures");
+const { encryptStream, decryptStream, signStream, openSignStream } = require("./../utils/cryptoFeatures");
 
 const whiteList = process.env.WHITELIST_TYPE.split(", ");
 const DB = process.env.DATABASE_LOCAL;
@@ -54,8 +55,8 @@ exports.checkType = catchAsync(async (req, res, next) => {
 exports.uploadFiles = catchAsync(async (req, res, next) => {
   const { name, data, size, mimetype, md5 } = req.files.file;
   const id = jwtDecoder(req.cookies.jwt).id;
-
-  const storageData = await streamEncrypt(data, "123456");
+  
+  const storageData = await encryptStream(data, "123456");
 
   const bufferStream = new stream.PassThrough();
   bufferStream.end(storageData);
@@ -111,12 +112,12 @@ exports.download = catchAsync(async (req, res, next) => {
 
   const id = jwtDecoder(req.cookies.jwt).id;
 
-  await gridfsBucket.find({ filename: name }).toArray((err, files) => {
+  await gridfsBucket.find({"metadata.id":id, filename: name }).toArray((err, files) => {
     if (!files || files.length === 0) {
       return next(new AppError("Not found!", 404));
     }
     if (files[0].metadata.id != id) {
-      new next(AppError("Permission denied!", 403));
+      new next(new AppError("Permission denied!", 403));
     }
     const fileID = files[0]._id;
     const type = files[0].contentType;
@@ -130,7 +131,7 @@ exports.download = catchAsync(async (req, res, next) => {
 
     let bufferArray = [];
     let decrypt;
-    let decryptStream = new stream.PassThrough();
+    let resStream = new stream.PassThrough();
 
     downloadStream.on("data", function (chunk) {
       bufferArray.push(chunk);
@@ -138,9 +139,9 @@ exports.download = catchAsync(async (req, res, next) => {
 
     downloadStream.on("end", async function () {
       let buffer = Buffer.concat(bufferArray);
-      decrypt = await streamDecrypt(buffer, "123456");
-      decryptStream.end(decrypt);
-      decryptStream.pipe(res);
+      const decrypt = await decryptStream(buffer, '123456');
+      resStream.end(decrypt);
+      resStream.pipe(res);
     });
   });
 });
@@ -158,7 +159,7 @@ exports.delete = catchAsync(async (req, res, next) => {
   const id = await jwtDecoder(req.cookies.jwt).id;
 
   await gridfsBucket
-    .find({ "metadata.info.fileName": name })
+    .find({ "metadata.id":id, filename: name })
     .toArray((err, files) => {
       if (!files || files.length === 0) {
         return next(new AppError("Not found!", 404));
