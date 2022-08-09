@@ -12,6 +12,7 @@ const fileUpload = require('express-fileupload');
 
 const authRouter = require('./routes/authRoutes');
 const fileRouter = require('./routes/fileRoutes');
+const keyRouter = require('./routes/keyRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
@@ -63,6 +64,7 @@ app.use((req, res, next) => {
 
 app.use('/api/', authRouter);
 app.use('/api/file', fileRouter);
+app.use('/api/key', keyRouter);
 
 
 app.all('*', (req, res, next) => {
