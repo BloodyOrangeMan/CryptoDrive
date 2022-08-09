@@ -167,7 +167,7 @@ exports.delete = catchAsync(async (req, res, next) => {
       if (files[0].metadata.id != id) {
         console.log(files[0].metadata.id);
         console.log(id);
-        return new next(new AppError("Permission denied!", 403));
+        return next(new AppError("Permission denied!", 403));
       }
 
       const fileID = files[0]._id;
