@@ -21,13 +21,13 @@ exports.createKey = catchAsync(async (req, res, next) => {
 exports.getAllKey = catchAsync(async (req, res, next) => {
     const id = jwtDecoder(req.cookies.jwt).id;
 
-    const key = await Key.find({user:id});
+    const keys = await Key.find({user:id});
 
-    if(!key) {
+    if(!keys || keys.length == 0) {
         next(new AppError('You dont have a key yet, just create one'), 404);
     }
 
     res.status(200).json({
-        key
+        keys
     })
 });
