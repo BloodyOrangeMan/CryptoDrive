@@ -63,37 +63,6 @@ const SideBar = ({
 		setSideBarOption(option);
 	};
 
-	const uploadMetaData = () => {
-		const data = {
-			metadata: {
-				filename: metaData.fileName,
-				createdate: metaData.createDate,
-				lastmodified: metaData.lastModified,
-				filesize: metaData.fileSize.toString(),
-				type: metaData.type,
-			},
-		};
-		fetch(`${process.env.REACT_APP_IP}/setMetaData`, {
-			method: 'POST',
-			withCredentials: true,
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				if (data.success) {
-					reRender ? setReRender(0) : setReRender(1);
-					setFile();
-					setMetaData({});
-					setIsFileUploaded(false);
-				}
-			})
-			.catch((err) => console.log(err));
-	};
-
 	const handleUpload = (e) => {
 		var data = new FormData()
 		
@@ -103,14 +72,19 @@ const SideBar = ({
 			data.append(key, value);
 		});
 
-
 		fetch(`/api/file/`, {
 			method: 'POST',
 			withCredentials: true,
 			credentials: 'include',
 			body: data,
 		})
-			.then((res) => res.json())
+			.then((res) => {
+				if(res.status == 200) {
+					reRender ? setReRender(0) : setReRender(1);
+					setFile();
+					setMetaData({});
+					setIsFileUploaded(false);
+			}})
 			.catch((err) => console.log(err));
 
 		e.target.files = {};

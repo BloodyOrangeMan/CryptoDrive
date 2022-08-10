@@ -4,35 +4,33 @@ import { Button, Modal } from "antd";
 import { KeyOutlined } from "@ant-design/icons";
 import axios from "axios";
 
-const Key = (keyData) => {
+const Key = ({keyData, reRender, setReRender}) => {
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
-
-  function showFormData() {
-        console.log(form.getFieldsValue());//获取所有表单数据
-  }
 
   const handleClick = () => {
     setVisible(true);
   };
 
   const handleSubmit = (values) => {
-    axios.post('api/key/',{
+    axios
+      .post("api/key/", {
         withCredentials: true,
-        keyName:values.keyname,
-        passphrase:values.password,
-        passphraseConfirm:values.confirm
-    }).then(res => {
-        if (res.status === 201){
-            console.log('ok');
+        keyName: values.keyname,
+        passphrase: values.password,
+        passphraseConfirm: values.confirm,
+      })
+      .then((res) => {
+        if (res.status === 201) {
+          reRender ? setReRender(0) : setReRender(1);
+          setVisible(false);
         }
-    })
-  }
+      });
+  };
 
   const handleCancel = () => {
     setVisible(false);
   };
-
 
   const formItemLayout = {
     labelCol: {
@@ -72,22 +70,20 @@ const Key = (keyData) => {
       ),
     },
   ];
-
-
-
-  const keyDataArray = keyData.keyData;
+  
+ 
   let data = [];
-  if(keyDataArray != undefined) {
-   data = keyDataArray.map((key, index) => {
-    let newKey = {};
-    newKey.index = index;
-    newKey.name = key.name;
-    newKey.times = key.times;
-    newKey.createdAt = key.createdAt;
-    newKey.tags = "test";
-    return newKey;
-  });
-}
+  if (keyData !== undefined) {
+    data = keyData.map((key, index) => {
+      let newKey = {};
+      newKey.index = index;
+      newKey.name = key.name;
+      newKey.times = key.times;
+      newKey.createdAt = key.createdAt;
+      newKey.tags = "test";
+      return newKey;
+    });
+  }
 
   return (
     <div className="key">
@@ -98,23 +94,22 @@ const Key = (keyData) => {
             visible={visible}
             onCancel={handleCancel}
             footer={[
-                <Button key="back" onClick={handleCancel}>
-                  Return
-                </Button>,
-                <Button key="submit" type="primary"  onClick={form.submit}>
-                  Submit
-                </Button>,
-                
-              ]}
+              <Button key="back" onClick={handleCancel}>
+                Return
+              </Button>,
+              <Button key="submit" type="primary" onClick={form.submit}>
+                Submit
+              </Button>,
+            ]}
           >
             <Form
               {...formItemLayout}
-                form={form}
+              form={form}
               name="register"
-                onFinish={handleSubmit}
+              onFinish={handleSubmit}
               scrollToFirstError
             >
-            <Form.Item
+              <Form.Item
                 name="keyname"
                 label="Keyname"
                 tooltip="What do you want to name this key? "
@@ -129,41 +124,45 @@ const Key = (keyData) => {
                 <Input />
               </Form.Item>
               <Form.Item
-        name="password"
-        label="Password"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your password!',
-          },
-        ]}
-        hasFeedback
-      >
-        <Input.Password />
-      </Form.Item>
+                name="password"
+                label="Password"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your password!",
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input.Password />
+              </Form.Item>
 
-      <Form.Item
-        name="confirm"
-        label="Confirm Password"
-        dependencies={['password']}
-        hasFeedback
-        rules={[
-          {
-            required: true,
-            message: 'Please confirm your password!',
-          },
-          ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue('password') === value) {
-                return Promise.resolve();
-              }
-              return Promise.reject(new Error('The two passwords that you entered do not match!'));
-            },
-          }),
-        ]}
-      >
-        <Input.Password />
-      </Form.Item>
+              <Form.Item
+                name="confirm"
+                label="Confirm Password"
+                dependencies={["password"]}
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: "Please confirm your password!",
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error(
+                          "The two passwords that you entered do not match!"
+                        )
+                      );
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
             </Form>
           </Modal>
           <Button
@@ -184,7 +183,7 @@ const Key = (keyData) => {
             pagination={{
               position: ["bottomCenter"],
               showSizeChanger: true,
-              pageSizeOptions: ["10", "20", "50",],
+              pageSizeOptions: ["10", "20", "50"],
             }}
           />
         </Col>

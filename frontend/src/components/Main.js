@@ -36,13 +36,13 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
   };
 
   const getKeys = () => {
-    axios.get('api/key/', {
-      withCredentials: true,
-    })
-    .then((res) => {
-      setKeys(res.data.keys);
-    })
-
+    axios
+      .get("api/key/", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setKeys(res.data.keys);
+      });
   };
 
   console.log(keys);
@@ -71,7 +71,13 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
         </div>
       );
     case 1:
-      return <Key keyData={keys}></Key>;
+      return (
+        <Key 
+            keyData={keys} 
+            reRender={reRender} 
+            setReRender={setReRender}/>
+            
+      );
     case 2:
       return (
         <div className="dev-team">
