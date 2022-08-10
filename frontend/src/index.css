@@ -1,5 +1,6 @@
 /* Imports */
 @import url('https://fonts.googleapis.com/css2?family=Manrope&display=swap');
+@import '~antd/dist/antd.css';
 
 * {
 	margin: 0;
@@ -93,7 +94,7 @@ body {
 	margin-left: 6px;
 }
 .main {
-	flex: 0.83;
+	flex: 1;
 	display: grid;
 	width: 100%;
 	top: 0;
@@ -103,6 +104,11 @@ body {
 	justify-content: flex-start;
 	align-items: flex-start;
 	flex-wrap: wrap;
+}
+
+.key {
+	flex: 1;
+	margin: 20px;
 }
 
 .login-container {
@@ -272,3 +278,5 @@ body {
 .warning {
 	color:red
 }
+
+

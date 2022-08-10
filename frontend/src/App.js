@@ -5,7 +5,7 @@ import Dashboard from './components/Dashboard';
 
 function App() {
 	return (
-		<div className="App">
+		// <div className="App">
 			<Router>
 				<Switch>
 					{/* Login Route */}
@@ -21,7 +21,7 @@ function App() {
 					</Route>
 				</Switch>
 			</Router>
-		</div>
+		// </div>
 	);
 }
 
