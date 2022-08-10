@@ -89,21 +89,24 @@ const Main = ({ metaData, reRender, setReRender }) => {
 	// HANDLE DOWNLOAD
 	const handleDownload = () => {
 		const filename = metaData.fileName;
-
-		// history.push(`/api/file/${filename}`);
-
-		fetch(`/api/file/${filename}`, {
-			method: 'GET',
-			withCredentials: true,
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		})
-			.then((res) => {if (res.status === 200) {
-				console.log(res);
-			}})
-			.catch((err) => console.log(err));
+		axios
+        .get(
+            `/api/file/${filename}`, {
+                responseType: 'blob',
+				withCredentials: true
+            }
+        )
+        .then(response => {
+			const url = window.URL.createObjectURL(new Blob([response.data]));
+			const link = document.createElement('a');
+			link.href = url;
+			link.setAttribute('download', filename); //or any other extension
+			document.body.appendChild(link);
+			link.click();
+        })
+        .catch( (error) => {
+            console.error("File could not be downloaded:", error);
+        });
 	};
 	return (
 		<div className="file">

@@ -7,6 +7,8 @@ import AddIcon from '@material-ui/icons/Add';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import KeyIcon from '@mui/icons-material/Key';
+
 
 require('dotenv').config();
 
@@ -32,6 +34,7 @@ const SideBar = ({
 	// State Variables
 	const [listActive1, setListActive1] = useState('list-item-active');
 	const [listActive2, setListActive2] = useState('');
+	const [listActive3, setListActive3] = useState('');
 	const [open, setOpen] = useState(false);
 	const [isFileUploaded, setIsFileUploaded] = useState(false);
 	const [metaData, setMetaData] = useState({});
@@ -190,6 +193,7 @@ const SideBar = ({
 						handleClick(0);
 						setListActive1('list-item-active');
 						setListActive2('');
+						setListActive3('');
 					}}
 				>
 					<ComputerIcon className={classes.btn} fontSize="large" />
@@ -201,6 +205,19 @@ const SideBar = ({
 						handleClick(1);
 						setListActive2('list-item-active');
 						setListActive1('');
+						setListActive3('');
+					}}
+				>
+					<KeyIcon className={classes.btn} fontSize="large" />
+					<p className="list-text">My Keys</p>
+				</li>
+				<li
+					className={`list-item ${listActive3}`}
+					onClick={() => {
+						handleClick(2);
+						setListActive3('list-item-active');
+						setListActive1('');
+						setListActive2('');
 					}}
 				>
 					<GroupIcon className={classes.btn} fontSize="large" />
