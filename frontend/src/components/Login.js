@@ -162,7 +162,11 @@ const Login = () => {
 						Dont have an Account? Register Now.
 					</a>
 				</div>
-
+				<div className="links-div">
+					<a href="/resetPsw" className="forgot-password">
+						retrieve password
+					</a>
+				</div>
 				<Button
 					type="submit"
 					variant="contained"
