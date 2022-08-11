@@ -1,18 +1,18 @@
 
 const nodemailer = require("nodemailer");
-//创建一个smtp服务器
+// Create an smtp server
 const config = {
     host: 'smtp.163.com',
     port: 465,
     auth: {
-        user: process.env.EMAIL_ADDRESS, //自己的邮箱账号
-        pass: process.env.EMAIL_AUTHCODE //STMP授权码
+        user: process.env.EMAIL_ADDRESS, // Mail server account
+        pass: process.env.EMAIL_AUTHCODE // SMTP License Code
     }
 };
-// 创建一个SMTP客户端对象
+// Create an SMTP client object
 const transporter = nodemailer.createTransport(config);
 
-//发送邮件
+// Send Email
 module.exports = function (mail) {
     return new Promise((res, rej) => {
         transporter.sendMail(mail, function (error, info) {
