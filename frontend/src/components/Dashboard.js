@@ -15,7 +15,7 @@ const Dashboard = () => {
 
 	// API GET Request for is-logged
 	useEffect(() => {
-		document.title = 'Drive Clone';
+    document.title = 'Drive Clone';
 		axios.get('/api/isLoggedIn', {
 			withCredentials: true
 		}).then(res => {
@@ -30,7 +30,8 @@ const Dashboard = () => {
 		}).catch((err) => {
 			setIsLoggedIn(false);
 			history.push('/login');
-		});
+		})
+  });
 
 
   // State Variables
