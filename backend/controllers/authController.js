@@ -182,6 +182,7 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
 
       // THERE IS A LOGGED IN USER
       res.locals.user = currentUser;
+      res.status(200).json({ status: "success",user: currentUser.name});
     } catch (err) {
       return next(new AppError("Oops,Something wrong!", 500));
     }
@@ -190,7 +191,6 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
       new AppError("You are not logged in! Please log in to get access.", 401)
     );
   }
-  res.status(200).json({ status: "success" });
 });
 
 
