@@ -19,6 +19,7 @@ const Dashboard = () => {
 		axios.get('/api/isLoggedIn', {
 			withCredentials: true
 		}).then(res => {
+
 			if (res.status === 200) {
 				setIsLoggedIn(true);
 				setUserName('demo');
@@ -26,7 +27,10 @@ const Dashboard = () => {
 				setIsLoggedIn(false);
 				history.push('/login');
 			}
-		}).catch((err) => console.log(err));
+		}).catch((err) => {
+			setIsLoggedIn(false);
+			history.push('/login');
+		});
 
 
 	}, [history]);

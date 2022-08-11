@@ -57,11 +57,11 @@ keySchema.pre("save", async function (next) {
 });
 
 keySchema.methods.correctPassphrase = async function (
-    candidatePassphrase,
-    userPassphrase
-  ) {
-    return await bcrypt.compare(candidatePassphrase, userPassphrase);
-  };
+  candidatePassphrase,
+  userPassphrase
+) {
+  return await bcrypt.compare(candidatePassphrase, userPassphrase);
+};
 
 const Key = mongoose.model("Key", keySchema);
 
