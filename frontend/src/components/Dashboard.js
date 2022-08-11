@@ -13,31 +13,6 @@ const Dashboard = () => {
 
   console.log(process.env.REACT_APP_IP);
 
-  // useEffect(() => {
-  // 	document.title = 'Drive Clone';
-  // 	let url =
-  // 	'/api/isLoggedIn';
-  // 	// get request with fetch
-  // 	fetch(url, {
-  // 		method: 'GET',
-  // 		withCredentials: true,
-  // 		credentials: 'include',
-  // 		headers: {
-  // 			'Content-Type': 'application/json',
-  // 		},
-  // 	})
-  // 		.then((res) => {
-  // 			if(res.status !== 200) {
-  // 				setIsLoggedIn(false);
-  // 				history.push('/login');
-  // 			} else {
-  // 				setIsLoggedIn(true);
-  // 				setUserName('demo');
-  // 			}
-  // 		})
-  // 		.catch((err) => console.log(err));
-  // }, [history]);
-
   // API GET Request for is-logged
   useEffect(() => {
     document.title = "Drive Clone";
