@@ -13,6 +13,7 @@ const fileUpload = require('express-fileupload');
 const authRouter = require('./routes/authRoutes');
 const fileRouter = require('./routes/fileRoutes');
 const keyRouter = require('./routes/keyRoutes');
+const emailRouter = require('./routes/emailRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
@@ -24,30 +25,30 @@ app.use(cookieParser());
 app.use(helmet());
 
 app.use(cors({
-  origin : "http://localhost:3000",
+  origin: "http://localhost:3000",
   credentials: true,
 }));
 
 if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'));
-  }
+  app.use(morgan('dev'));
+}
 
 app.use(express.json());
 app.use(fileUpload({
   limits: {
-      fileSize: 10000000 //10MB
+    fileSize: 10000000 //10MB
   },
   abortOnLimit: true
 }));
 // app.use(express.static(`${__dirname}/public`));
 
 // Limit requests from same API
-// const limiter = rateLimit({
-//   max: 100,
-//   windowMs: 60 * 60 * 1000,
-//   message: 'Too many requests from this IP, please try again in an hour!'
-// });
-// app.use('/api', limiter);
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP, please try again in five minutes!'
+});
+app.use('/api', limiter);
 
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
@@ -56,16 +57,16 @@ app.use(mongoSanitize());
 app.use(xss());
 
 
- 
+
 app.use((req, res, next) => {
-    req.requestTime = new Date().toISOString();
-    next();
-  });
+  req.requestTime = new Date().toISOString();
+  next();
+});
 
 app.use('/api/', authRouter);
 app.use('/api/file', fileRouter);
 app.use('/api/key', keyRouter);
-
+app.use('/api/email', emailRouter)
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

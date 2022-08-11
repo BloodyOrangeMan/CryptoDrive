@@ -13,21 +13,25 @@ const Dashboard = () => {
 
   console.log(process.env.REACT_APP_IP);
 
-  // API GET Request for is-logged
-  useEffect(() => {
-    document.title = "Drive Clone";
-    axios
-      .get("/api/isLoggedIn", {
-        withCredentials: true,
-      })
-      .then((res) => {
-		setIsLoggedIn(true);
-		setUserName(res.data.user);
-})
-      .catch((err) => {
-		history.push('/login');
-	  });
-  }, [history]);
+	// API GET Request for is-logged
+	useEffect(() => {
+		document.title = 'Drive Clone';
+		axios.get('/api/isLoggedIn', {
+			withCredentials: true
+		}).then(res => {
+
+			if (res.status === 200) {
+				setIsLoggedIn(true);
+				setUserName('demo');
+			} else {
+				setIsLoggedIn(false);
+				history.push('/login');
+			}
+		}).catch((err) => {
+			setIsLoggedIn(false);
+			history.push('/login');
+		});
+
 
   // State Variables
   const [userName, setUserName] = useState("");

@@ -11,7 +11,7 @@ router
 
 router
     .route('/:name')
-    .get(authController.protect, fileController.checkPassphrase,fileController.download)
+    .get(authController.protect, fileController.checkPassphrase, fileController.download)
     .delete(authController.protect, fileController.delete);
 
 module.exports = router;
