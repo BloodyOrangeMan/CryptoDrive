@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
+import ResetPsw from './components/resetPsw';
 
 function App() {
 	return (
@@ -14,6 +15,9 @@ function App() {
 					</Route>
 					<Route exact path="/register">
 						<Register />
+					</Route>
+					<Route exact path="/resetpsw">
+						<ResetPsw />
 					</Route>
 					{/* Dashboard Route */}
 					<Route exact path="/">
