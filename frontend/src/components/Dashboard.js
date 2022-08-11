@@ -16,29 +16,6 @@ const Dashboard = () => {
 	// API GET Request for is-logged
 	useEffect(() => {
 		document.title = 'Drive Clone';
-		// let url =
-		// process.env.REACT_APP_IP + "/is-logged";
-		// // get request with fetch
-		// fetch(url, {
-		// 	method: 'GET',
-		// 	withCredentials: true,
-		// 	credentials: 'include',
-		// 	headers: {
-		// 		'Content-Type': 'application/json',
-		// 	},
-		// })
-		// 	.then((res) => res.json())
-		// 	.then((data) => {
-		// 		if (!data.success) {
-		// 			setIsLoggedIn(false);
-		// 			history.push('/login');
-		// 		} else {
-		// 			setIsLoggedIn(true);
-		// 			setUserName(data.user);
-		// 		}
-		// 	})
-		// 	.catch((err) => console.log(err));
-
 		axios.get('/api/isLoggedIn', {
 			withCredentials: true
 		}).then(res => {

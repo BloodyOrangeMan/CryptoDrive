@@ -109,6 +109,7 @@ body {
 .key {
 	flex: 1;
 	margin: 20px;
+	top: 0;
 }
 
 .login-container {

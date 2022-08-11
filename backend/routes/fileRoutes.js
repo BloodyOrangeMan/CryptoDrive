@@ -6,12 +6,12 @@ const router = express.Router();
 
 router
     .route('/')
-    .post(authController.protect, fileController.checkType, fileController.uploadFiles)
+    .post(authController.protect, fileController.checkType, fileController.checkPassphrase, fileController.uploadFiles)
     .get(authController.protect, fileController.getAll);
 
 router
     .route('/:name')
-    .get(authController.protect, fileController.download)
+    .get(authController.protect, fileController.checkPassphrase,fileController.download)
     .delete(authController.protect, fileController.delete);
 
 module.exports = router;

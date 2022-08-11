@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Space, Table, Col, Row, Form, Input, InputNumber } from "antd";
+import { useState } from "react";
+import { Space, Table, Col, Row, Form, Input,  } from "antd";
 import { Button, Modal } from "antd";
 import { KeyOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -183,7 +183,7 @@ const Key = ({keyData, reRender, setReRender}) => {
             pagination={{
               position: ["bottomCenter"],
               showSizeChanger: true,
-              pageSizeOptions: ["10", "20", "50"],
+              pageSizeOptions: ["5", "10", "20"],
             }}
           />
         </Col>

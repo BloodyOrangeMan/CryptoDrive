@@ -45,8 +45,6 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
       });
   };
 
-  console.log(keys);
-
   switch (sideBarOption) {
     case 0:
       return (
@@ -58,6 +56,7 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
                 reRender={reRender}
                 setReRender={setReRender}
                 key={i}
+                keyData={keys} 
               />
             ))
           ) : (

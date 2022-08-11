@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const keySchema = new mongoose.Schema({
   name: {
     type: String,
+    unique: true,
     required: [true, "Please give your key a name!"],
   },
   user: {
