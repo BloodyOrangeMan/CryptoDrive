@@ -64,7 +64,7 @@ function Header({ userName, setIsLoggedIn }) {
 				>
 					Logout
 				</Button>
-				<Avatar className={classes.avatar}>{userName[0]}</Avatar>
+				<Avatar className={classes.avatar}>{userName.slice(0,3)}</Avatar>
 			</div>
 		</div>
 	);
