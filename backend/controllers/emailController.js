@@ -26,14 +26,14 @@ exports.sendCode = catchAsync(async (req, res, next) => {
     const { _id, email, name } = user;
     let code = createCode();
     let mail = {
-        from: process.env.EMAIL_ADDRESS,// 发件人 自己邮箱
-        subject: '找回密码',//邮箱主题|标题
-        to: email,// 收件人
-        // 邮件内容，HTML格式
-        text: `${name}的验证码${code},有效期${process.env.EMAIL_TIMEOUT}分钟`//发送验证码
+        from: process.env.EMAIL_ADDRESS,// Sender/Mailbox Server
+        subject: 'Retrieve password',// Email subject
+        to: email,// Recipient
+        // Email content, HTML format
+        text: `The verification code for ${name} is ${code}, and the valid time is ${process.env.EMAIL_TIMEOUT} minutes.`//Send verification code
     };
 
-    // 发送邮件
+    // Send Email
     let sendMail = await nodemailer(mail);
     if (!sendMail || sendMail.error) return next(new AppError('Mailbox service error', 400))
 
@@ -44,7 +44,7 @@ exports.sendCode = catchAsync(async (req, res, next) => {
         type: 'resetPsw'
     })
 
-    res.status(200).json({ status: "success", message: `有效期${process.env.EMAIL_TIMEOUT}分钟` });
+    res.status(200).json({ status: "success", message: `The validity of the verification code is ${process.env.EMAIL_TIMEOUT} minutes.` });
 })
 
 exports.resetPsw = catchAsync(async (req, res, next) => {
@@ -59,28 +59,24 @@ exports.resetPsw = catchAsync(async (req, res, next) => {
 
     if (!user) return next(new AppError('The email address is not registered', 401))
 
-    //没有发送过验证码
+    // If no verification code has been sent
     if (!emailBox) return next(new AppError('Obtain the verification code first', 401))
 
     const { code: eCode, sendTime, used } = emailBox
 
-    //验证码已使用
+    // If the verification code has been used
     if (used) return next(new AppError("The verification code has been used!", 401));
 
-    //验证码校验
+    // Captcha verification
     if (code != eCode) return next(new AppError('Code Error', 401))
 
-
-
-    //十分钟有效期
+    // Ten minutes validity
     if ((Date.now() - sendTime) > (Number(process.env.EMAIL_TIMEOUT || 10) * 60000)) return next(new AppError('Verification code timeout', 401))
 
-
-
-    //更新用户密码
+    // Update user password
     let changeUser = await User.updateOne({ email: uemail }, { password, passwordConfirm });
 
-    //更新验证码使用状态
+    // Update Captcha usage status
     await Email.updateOne({ email: uemail, code }, { used: true })
 
     res.status(200).json({ status: "success", changeUser });
