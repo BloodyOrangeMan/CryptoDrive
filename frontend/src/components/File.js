@@ -41,8 +41,7 @@ const Main = ({ metaData, reRender, setReRender ,keyData}) => {
   useEffect( () => {
     console.log(keyData);
     setKeys(keyData);
-  }
-    , [visible]);
+  }, [visible]);
 
   const handleModal = () => {
     showModal();
@@ -180,7 +179,7 @@ const Main = ({ metaData, reRender, setReRender ,keyData}) => {
                 }
               >
                 {keys.map((key) => {
-                  return <Option value={key.name}>{key.name}</Option>;
+                  return <Option value={key._id}>{key.name}</Option>;
                 })}
               </Select>) : (<Select></Select>)}
           </Form.Item>

@@ -48,6 +48,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
   const passphrase = this.password;
   const keyPair = await genSignKeyPair(passphrase);
   console.log(keyPair);

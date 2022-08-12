@@ -87,11 +87,12 @@ const ResetPsw = () => {
 
 	const postReset = (e) => {
 		e.preventDefault();
-		axios.post('/api/email/resetPsw',{
+		axios.post('/api/resetPsw',{
 			code: code,
 			email: email,
 			password: password,
-			passwordConfirm: passwordConfirm
+			passwordConfirm: passwordConfirm,
+			withCredentials: true
 		}).then(res =>{
 			console.log(res.status)
 			if (res.status === 201||res.status===200) {
@@ -115,7 +116,7 @@ const ResetPsw = () => {
             return;
         }
         //获取验证码
-        axios.post('/api/email/sendcode',{
+        axios.post('/api/sendcode',{
             email
         })
         .then(res=>{

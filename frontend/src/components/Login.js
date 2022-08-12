@@ -62,9 +62,9 @@ const Login = () => {
 		// Username regex
 		// password regex
 		const passwordRegex =
-		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/;
+		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
 
-		const nameRegex = /^[a-zA-Z0-9_-]{4,16}$/;
+		const nameRegex = /^[a-zA-Z0-9_-]{3,16}$/;
 
 
 		if (nameRegex.test(name) && passwordRegex.test(password)) {
@@ -80,24 +80,6 @@ const Login = () => {
 	};
 
 	const postLogin = (name, password) => {
-		// fetch(`${process.env.REACT_APP_IP}/login`, {
-		// 	method: 'POST',
-		// 	withCredentials: true,
-		// 	credentials: 'include',
-		// 	headers: {
-		// 		'Content-Type': 'application/json',
-		// 	},
-		// 	body: JSON.stringify(data),
-		// })
-		// 	.then((res) => res.json())
-		// 	.then((data) => {
-		// 		if (data.success) {
-		// 			history.push('/');
-		// 		} else {
-		// 			setIsValidated(false);
-		// 		}
-		// 	})
-		// 	.catch((err) => console.log(err));
 		axios.post('/api/login',{
 			name: name,
 			password: password

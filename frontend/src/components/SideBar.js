@@ -167,7 +167,7 @@ const SideBar = ({
               }
             >
               {keys.map((key) => {
-                return <Option value={key.name}>{key.name}</Option>;
+                return <Option value={key._id}>{key.name}</Option>;
               })}
             </Select>
           </Form.Item>

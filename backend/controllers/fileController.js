@@ -58,27 +58,27 @@ exports.checkType = catchAsync(async (req, res, next) => {
 });
 
 exports.checkPassphrase = catchAsync(async (req, res, next) => {
-  let keyName, passphrase;
+  let keyID, passphrase;
   if (req.method == "POST") {
-    keyName = req.body.key;
+    keyID = req.body.key;
     passphrase = req.body.passphrase;
   } else if (req.method == "GET") {
-    keyName = req.headers.key;
+    keyID = req.headers.key;
     passphrase = req.headers.passphrase;
   }
 
-  if (!keyName || !passphrase) {
+  if (!keyID || !passphrase) {
     return next(new AppError("Please provide a key and passphrase"), 400);
   }
 
-  const key = await Key.findOne({ name: keyName }).select("+passphrase");
+  const key = await Key.findOne({ _id: keyID }).select("+passphrase");
 
   if (!(await key.correctPassphrase(passphrase, key.passphrase))) {
     return next(new AppError("Incorrect key passphrase"), 401);
   }
 
   await Key.findOneAndUpdate(
-    { name: keyName },
+    { _id: keyID },
     { $inc: { times: 1 } },
     { upsert: true }
   );

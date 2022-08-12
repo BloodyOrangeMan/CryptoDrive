@@ -8,12 +8,9 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const fileUpload = require('express-fileupload');
 
-
-
 const authRouter = require('./routes/authRoutes');
 const fileRouter = require('./routes/fileRoutes');
 const keyRouter = require('./routes/keyRoutes');
-const emailRouter = require('./routes/emailRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
@@ -44,7 +41,7 @@ app.use(fileUpload({
 
 // Limit requests from same API
 const limiter = rateLimit({
-  max: 100,
+  max: 1000,
   windowMs: 60 * 60 * 1000,
   message: 'Too many requests from this IP, please try again in five minutes!'
 });
@@ -66,7 +63,6 @@ app.use((req, res, next) => {
 app.use('/api/', authRouter);
 app.use('/api/file', fileRouter);
 app.use('/api/key', keyRouter);
-app.use('/api/email', emailRouter)
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

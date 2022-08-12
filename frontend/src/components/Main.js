@@ -18,9 +18,8 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
         })
         .then((res) => {
           setKeys(res.data.keys);
-          console.log("test");
         });
-  }, []);
+  }, [reRender]);
 
   // State Variables
   const [files, setFiles] = useState();
