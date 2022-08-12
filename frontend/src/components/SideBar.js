@@ -32,7 +32,7 @@ const SideBar = ({
     axios.get("api/key/", { withCredentials: true }).then((res) => {
       setKeys(res.data.keys);
     });
-  }, [reRender]);
+  }, [visible]);
 
   // Functions
   // Button Styles

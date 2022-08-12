@@ -12,8 +12,15 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
   // UseEffect
   useEffect(() => {
     getFiles();
-    getKeys();
-  }, [reRender]);
+      axios
+        .get("api/key/", {
+          withCredentials: true,
+        })
+        .then((res) => {
+          setKeys(res.data.keys);
+          console.log("test");
+        });
+  }, []);
 
   // State Variables
   const [files, setFiles] = useState();
@@ -32,16 +39,6 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
       .then((res) => res.json())
       .then((data) => {
         setFiles(data.files);
-      });
-  };
-
-  const getKeys = () => {
-    axios
-      .get("api/key/", {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setKeys(res.data.keys);
       });
   };
 

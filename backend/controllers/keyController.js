@@ -23,8 +23,6 @@ exports.getAllKey = catchAsync(async (req, res, next) => {
 
     const keys = await Key.find({ user: id });
 
-    console.log(keys.length);
-
     if (!keys || keys.length == 0) {
         return next(new AppError('You dont have a key yet, just create one'), 404);
     }

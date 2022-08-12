@@ -12,6 +12,7 @@ import Buttonicon from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modalui from "@mui/material/Modal";
 import axios from "axios";
+import { ConsoleSqlOutlined } from "@ant-design/icons";
 
 require("dotenv").config();
 
@@ -27,7 +28,7 @@ const style = {
   p: 4,
 };
 
-const Main = ({ metaData, reRender, setReRender }) => {
+const Main = ({ metaData, reRender, setReRender ,keyData}) => {
   const [open, setOpen] = useState(false);
   const [newFileName, setNewFileName] = useState(metaData.filename);
   const [visible, setVisible] = useState(false);
@@ -37,11 +38,11 @@ const Main = ({ metaData, reRender, setReRender }) => {
   const [form] = Form.useForm();
   const { Option } = Select;
 
-  useEffect(() => {
-    axios.get("api/key/", { withCredentials: true }).then((res) => {
-      setKeys(res.data.keys);
-    });
-  }, [reRender]);
+  useEffect( () => {
+    console.log(keyData);
+    setKeys(keyData);
+  }
+    , [visible]);
 
   const handleModal = () => {
     showModal();
@@ -166,20 +167,22 @@ const Main = ({ metaData, reRender, setReRender }) => {
         layout="horizontal"
 		>
           <Form.Item name="key" label="Key">
-            <Select
-              showSearch
-              placeholder="Select a key"
-              optionFilterProp="children"
-              onChange={onChange}
-              onSearch={onSearch}
-              filterOption={(input, option) =>
-                option.children.toLowerCase().includes(input.toLowerCase())
-              }
-            >
-              {keys.map((key) => {
-                return <Option value={key.name}>{key.name}</Option>;
-              })}
-            </Select>
+
+            {
+              keys ? (              <Select
+                showSearch
+                placeholder="Select a key"
+                optionFilterProp="children"
+                onChange={onChange}
+                onSearch={onSearch}
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {keys.map((key) => {
+                  return <Option value={key.name}>{key.name}</Option>;
+                })}
+              </Select>) : (<Select></Select>)}
           </Form.Item>
           <Form.Item
             name="password"
