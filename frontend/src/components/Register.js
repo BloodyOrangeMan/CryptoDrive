@@ -4,6 +4,8 @@ import Button from '@material-ui/core/Button';
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import axios from 'axios';
+import { passwordStrength } from 'check-password-strength'
+
 
 require('dotenv').config();
 
@@ -21,6 +23,34 @@ const Register = () => {
 	const [isValidated, setIsValidated] = useState(false);
 	const [isClicked, setIsclicked] = useState(false);
 	const [warning,setWarning] = useState('');
+	const [checker,setChecker] = useState('Password Empty😑');
+	const [color,setColor] = useState('grey')
+	
+	const passwordChecker = (value) => {
+		let strength = passwordStrength(value).value;
+		switch(strength) {
+			case "Too weak":{
+				setChecker("Password Too weak😭");
+				setColor('red');
+				break;
+			}
+			case "Weak":{
+				setChecker("Password weak🥺");
+				setColor('olive');
+				break;
+			}
+			case "Medium":{
+				setChecker("Password OK😬");
+				setColor('lime');
+				break;
+			}
+			case "Strong":{
+				setChecker("Password Good🤩");
+				setColor('green');
+				break;
+			}
+		}
+	}
 
 	// functions
 	const useStyles = makeStyles((theme) => ({
@@ -38,7 +68,7 @@ const Register = () => {
 			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		// password regex
 		const passwordRegex =
-		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/;
+		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
 
 		const nameRegex = /^[a-zA-Z0-9_-]{4,16}$/;
 
@@ -61,7 +91,7 @@ const Register = () => {
 			setWarning('Incorrect email format!')
 		} else if (!passwordRegex.test(password)) {
 			setIsValidated(false);
-			setWarning('Password should be 8 to 10 characters, at least one uppercase letter, one lowercase letter, one number and one special character!')
+			setWarning('Password should be 8 to 16 characters, at least one uppercase letter, one lowercase letter, one number and one special character!')
 		} else {
 			setIsValidated(true);
 			postRegister(e, email, password);
@@ -147,8 +177,10 @@ const Register = () => {
 					variant="outlined"
 					onChange={(e) => {
 						setPassword(e.target.value);
+						passwordChecker(e.target.value);
 					}}
 				/>
+				<p style = {{color:color}}>{checker}</p>
 				<TextField
 					id="outlined-full-width"
 					type="password"
