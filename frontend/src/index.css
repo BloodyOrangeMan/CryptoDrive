@@ -44,7 +44,7 @@ body {
 }
 
 .sidebar {
-	height: 90vh;
+	height: 100vh;
 	flex: 0.17;
 	background: #f4f2f2;
 	border-right: 1px solid #c0c0c0;
@@ -96,14 +96,20 @@ body {
 .main {
 	flex: 1;
 	display: grid;
-	width: 100%;
+	width: 90vw;
 	top: 0;
 	margin: 20px;
-	grid-template-columns: 250px 250px 250px 250px;
+	/* grid-template-columns: 250px 250px 250px 250px;
 	grid-template-rows: 75px 75px 75px 75px;
 	justify-content: flex-start;
 	align-items: flex-start;
-	flex-wrap: wrap;
+	flex-wrap: wrap; */
+}
+
+@media screen and (min-width:768px) {
+	.main {
+		grid-template-columns: repeat(5,1fr);
+	}
 }
 
 .key {
@@ -173,6 +179,7 @@ body {
 	cursor: pointer;
 	margin: 10px;
 	min-width: 150px;
+	max-height: 250px;
 	padding: 15px;
 	display: flex;
 	flex-direction: column;
