@@ -29,7 +29,7 @@ const Register = () => {
     let strength = passwordStrength(value).value;
     switch (strength) {
       case "Too weak": {
-        setChecker("Password Too weak😭");
+        setChecker("Password Too weak😅");
         setColor("red");
         break;
       }
