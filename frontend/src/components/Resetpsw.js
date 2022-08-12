@@ -4,8 +4,7 @@ import Button from '@material-ui/core/Button';
 import { useState, useEffect,useRef } from 'react';
 import { useHistory } from 'react-router';
 import axios from 'axios';
-
-
+import { passwordStrength } from "check-password-strength";
 
 require('dotenv').config();
 
@@ -14,8 +13,6 @@ const ResetPsw = () => {
 	useEffect(() => {
 		document.title = 'ResetPsw - Drive Clone';
 	}, []);
-
-
 
 	// State Variables
 	const [code, setCode] = useState('');
@@ -26,6 +23,8 @@ const ResetPsw = () => {
 	const [isValidated, setIsValidated] = useState(false);
 	const [isClicked, setIsclicked] = useState(false);
 	const [warning,setWarning] = useState('');
+	const [color, setColor] = useState("grey");
+	const [checker, setChecker] = useState("Password Empty😑");
 
 	const [emailTimeout, setEmailTimeout] = useState(0);
     const timeRef=useRef()// Setting the delay timer
@@ -41,6 +40,31 @@ const ResetPsw = () => {
         }
     },[emailTimeout])
 
+	const passwordChecker = (value) => {
+		let strength = passwordStrength(value).value;
+		switch (strength) {
+		  case "Too weak": {
+			setChecker("Password Too weak😅");
+			setColor("red");
+			break;
+		  }
+		  case "Weak": {
+			setChecker("Password weak🥺");
+			setColor("olive");
+			break;
+		  }
+		  case "Medium": {
+			setChecker("Password OK😬");
+			setColor("lime");
+			break;
+		  }
+		  case "Strong": {
+			setChecker("Password Good🤩");
+			setColor("green");
+			break;
+		  }
+		}
+	  };
 
 	// functions
 	const useStyles = makeStyles((theme) => ({
@@ -86,24 +110,26 @@ const ResetPsw = () => {
 	};
 
 	const postReset = (e) => {
-		e.preventDefault();
-		axios.post('/api/resetPsw',{
-			code: code,
-			email: email,
-			password: password,
-			passwordConfirm: passwordConfirm,
-			withCredentials: true
-		}).then(res =>{
-			console.log(res.status)
-			if (res.status === 201||res.status===200) {
-				setIsValidated(true);
-				history.push('/login');
-			} else {
-				setIsValidated(false);
-			}
-		}).catch((err) => console.log(err));
-	};
-
+    e.preventDefault();
+    axios
+      .post("/api/resetPsw", {
+        code: code,
+        email: email,
+        password: password,
+        passwordConfirm: passwordConfirm,
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res.status);
+        if (res.status === 201 || res.status === 200) {
+          setIsValidated(true);
+          history.push("/login");
+        } else {
+          setIsValidated(false);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
 
     const getCode = ()=>{
         // Recapture countdown in progress
@@ -131,125 +157,127 @@ const ResetPsw = () => {
     
 	return (
 		<div className="login-container">
-			<form className="login-form">
-				<div className="form-header">
-					<img
-						className="form-logo"
-						src={process.env.PUBLIC_URL + '/Static/google_drive.svg'}
-						alt="Drive Logo"
-					/>
-					<h3 className="form-title">Reset</h3>
-				</div>
-				<TextField
-					id="outlined-full-width"
-					label="Email"
-					style={{ margin: 8 }}
-					{...(!isValidated && isClicked ? { error: true } : {})}
-					placeholder="Email"
-					fullWidth
-					margin="normal"
-					InputLabelProps={{
-						shrink: true,
-					}}
-					autoComplete="off"
-					variant="outlined"
-					onChange={(e) => {
-						setEmail(e.target.value);
-					}}
-				/>
-				<TextField
-					id="outlined-full-width"
-					label="Code"
-					style={{ margin: 8 }}
-					{...(!isValidated && isClicked ? { error: true } : {})}
-					placeholder="Code"
-					fullWidth
-					margin="normal"
-					InputLabelProps={{
-						shrink: true,
-					}}
-					autoComplete="off"
-					variant="outlined"
-					onChange={(e) => {
-						setCode(e.target.value);
-					}}
-                    InputProps={{
-                        endAdornment:<InputAdornment position="end">
-                            <Button
-
-                                variant="contained"
-                                size="medium"
-                                color="primary"
-                                className={classes.margin}
-                                style={{width:100}}
-                                onClick={()=>getCode()}
-                            >
-                                {emailTimeout>0?emailTimeout:"Get Code"}
-                            </Button>
-                        </InputAdornment>
-                    }}
-				/>
-
-				<TextField
-					id="outlined-full-width"
-					type="password"
-					label="Password"
-					style={{ margin: 8 }}
-					{...(!isValidated && isClicked ? { error: true } : {})}
-					placeholder="Password"
-					fullWidth
-					margin="normal"
-					InputLabelProps={{
-						shrink: true,
-					}}
-					autoComplete="off"
-					variant="outlined"
-					onChange={(e) => {
-						setPassword(e.target.value);
-					}}
-				/>
-				<TextField
-					id="outlined-full-width"
-					type="password"
-					label="PasswordConfirm"
-					style={{ margin: 8 }}
-					{...(!isValidated && isClicked ? { error: true } : {})}
-					placeholder="PasswordConfirm"
-					fullWidth
-					margin="normal"
-					InputLabelProps={{
-						shrink: true,
-					}}
-					autoComplete="off"
-					variant="outlined"
-					onChange={(e) => {
-						setpasswordConfirm(e.target.value);
-					}}
-				/>
-
-				<p className='warning'>{warning}</p>
-
-				<div className="links-div">
-					<a href="/login" className="forgot-password">
-						Already Have an Account? Login.
-					</a>
-				</div>
-
-				<Button
-					type="submit"
-					variant="contained"
-					size="medium"
-					color="primary"
-					className={classes.margin}
-					onClick={validateCreds}
-				>
-					Reset
-				</Button>
-				
-			</form>
+		  <form className="login-form">
+			<div className="form-header">
+			  <img
+				className="form-logo"
+				src={process.env.PUBLIC_URL + "/Static/google_drive.svg"}
+				alt="Drive Logo"
+			  />
+			  <h3 className="form-title">Reset</h3>
+			</div>
+			<TextField
+			  id="outlined-full-width"
+			  label="Email"
+			  style={{ margin: 8 }}
+			  {...(!isValidated && isClicked ? { error: true } : {})}
+			  placeholder="Email"
+			  fullWidth
+			  margin="normal"
+			  InputLabelProps={{
+				shrink: true,
+			  }}
+			  autoComplete="off"
+			  variant="outlined"
+			  onChange={(e) => {
+				setEmail(e.target.value);
+			  }}
+			/>
+			<TextField
+			  id="outlined-full-width"
+			  label="Code"
+			  style={{ margin: 8 }}
+			  {...(!isValidated && isClicked ? { error: true } : {})}
+			  placeholder="Code"
+			  fullWidth
+			  margin="normal"
+			  InputLabelProps={{
+				shrink: true,
+			  }}
+			  autoComplete="off"
+			  variant="outlined"
+			  onChange={(e) => {
+				setCode(e.target.value);
+			  }}
+			  InputProps={{
+				endAdornment: (
+				  <InputAdornment position="end">
+					<Button
+					  variant="contained"
+					  size="medium"
+					  color="primary"
+					  className={classes.margin}
+					  style={{ width: 100 }}
+					  onClick={() => getCode()}
+					>
+					  {emailTimeout > 0 ? emailTimeout : "Get Code"}
+					</Button>
+				  </InputAdornment>
+				),
+			  }}
+			/>
+	
+			<TextField
+			  id="outlined-full-width"
+			  type="password"
+			  label="Password"
+			  style={{ margin: 8 }}
+			  {...(!isValidated && isClicked ? { error: true } : {})}
+			  placeholder="Password"
+			  fullWidth
+			  margin="normal"
+			  InputLabelProps={{
+				shrink: true,
+			  }}
+			  autoComplete="off"
+			  variant="outlined"
+			  onChange={(e) => {
+				setPassword(e.target.value);
+				passwordChecker(e.target.value);
+			  }}
+			/>
+			<p style={{ color: color }}>{checker}</p>
+	
+			<TextField
+			  id="outlined-full-width"
+			  type="password"
+			  label="PasswordConfirm"
+			  style={{ margin: 8 }}
+			  {...(!isValidated && isClicked ? { error: true } : {})}
+			  placeholder="PasswordConfirm"
+			  fullWidth
+			  margin="normal"
+			  InputLabelProps={{
+				shrink: true,
+			  }}
+			  autoComplete="off"
+			  variant="outlined"
+			  onChange={(e) => {
+				setpasswordConfirm(e.target.value);
+			  }}
+			/>
+	
+			<p className="warning">{warning}</p>
+	
+			<div className="links-div">
+			  <a href="/login" className="forgot-password">
+				Already Have an Account? Login.
+			  </a>
+			</div>
+	
+			<Button
+			  type="submit"
+			  variant="contained"
+			  size="medium"
+			  color="primary"
+			  className={classes.margin}
+			  onClick={validateCreds}
+			>
+			  Reset
+			</Button>
+		  </form>
 		</div>
-	);
-};
-
-export default ResetPsw;
-
+	  );
+	};
+	
+	export default ResetPsw;

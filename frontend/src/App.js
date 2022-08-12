@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
-import ResetPsw from './components/resetPsw';
+import ResetPsw from './components/Resetpsw';
 
 function App() {
 	return (
