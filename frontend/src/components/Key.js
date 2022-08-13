@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Space, Table, Col, Row, Form, Input,  } from "antd";
+import { Space, Table, Col, Row, Form, Input, } from "antd";
 import { Button, Modal } from "antd";
 import { KeyOutlined } from "@ant-design/icons";
 import axios from "axios";
 
-const Key = ({keyData, reRender, setReRender}) => {
+const Key = ({ keyData, reRender, setReRender }) => {
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
 
@@ -70,8 +70,8 @@ const Key = ({keyData, reRender, setReRender}) => {
       ),
     },
   ];
-  
- 
+
+
   let data = [];
   if (keyData !== undefined) {
     data = keyData.map((key, index) => {

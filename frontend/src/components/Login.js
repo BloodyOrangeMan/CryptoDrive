@@ -9,29 +9,11 @@ require('dotenv').config();
 
 const Login = () => {
 	const history = useHistory();
-	
+
 
 	// useEffect
 	useEffect(() => {
 		document.title = 'Login - Drive Clone';
-
-		// get request with fetch
-		// fetch(`/api/isLoggedIn/`, {
-		// 	method: 'GET',
-		// 	withCredentials: true,
-		// 	credentials: 'include',
-		// 	headers: {
-		// 		'Content-Type': 'application/json',
-		// 	},
-		// })
-		// 	.then((res) => res.json())
-		// 	.then((data) => {
-		// 		if (data.success) {
-		// 			history.push('/');
-		// 		}
-		// 	})
-		// 	.catch((err) => console.log(err));
-
 		axios.get('/api/isLoggedIn', {
 			withCredentials: true
 		}).then(res => {
@@ -62,7 +44,7 @@ const Login = () => {
 		// Username regex
 		// password regex
 		const passwordRegex =
-		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
+			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
 
 		const nameRegex = /^[a-zA-Z0-9_-]{3,16}$/;
 
@@ -80,7 +62,7 @@ const Login = () => {
 	};
 
 	const postLogin = (name, password) => {
-		axios.post('/api/login',{
+		axios.post('/api/login', {
 			name: name,
 			password: password
 		}).then(res => {
