@@ -152,4 +152,5 @@ exports.openSignStream = async (sign, pk) => {
   const raw = sodium.crypto_sign_open(sign, publicKey)
 
   return raw;
-}
+};
+

@@ -12,6 +12,24 @@ const Key = ({ keyData, reRender, setReRender }) => {
     setVisible(true);
   };
 
+  const handleDelete = (e,record) => {
+    e.preventDefault();
+    axios
+        .delete("api/key/", {
+          withCredentials: true,
+          headers:{
+            id:record.key
+          }
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            reRender ? setReRender(0) : setReRender(1);
+          }
+        }).catch((err) => {
+          reRender ? setReRender(0) : setReRender(1);
+        });
+  }
+
   const handleSubmit = (values) => {
     axios
       .post("api/key/", {
@@ -64,18 +82,21 @@ const Key = ({ keyData, reRender, setReRender }) => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Space size="middle">
-          <a>Delete</a>
-        </Space>
+
+              <a onClick={(e) => {
+                handleDelete(e, record);
+              }}>Delete</a>
       ),
     },
   ];
-
+  
+  console.log(keyData,"test");
 
   let data = [];
   if (keyData !== undefined) {
     data = keyData.map((key, index) => {
       let newKey = {};
+      newKey.key = key._id;
       newKey.index = index;
       newKey.name = key.name;
       newKey.times = key.times;

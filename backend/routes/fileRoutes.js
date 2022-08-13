@@ -7,7 +7,8 @@ const router = express.Router();
 router
     .route('/')
     .post(authController.protect, fileController.checkType, fileController.checkPassphrase, fileController.uploadFiles)
-    .get(authController.protect, fileController.getAll);
+    .get(authController.protect, fileController.getAll)
+    .patch(authController.protect, fileController.update);
 
 router
     .route('/:name')
