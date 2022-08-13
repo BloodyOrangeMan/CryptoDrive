@@ -214,7 +214,7 @@ exports.delete = catchAsync(async (req, res, next) => {
   const id = await jwtDecoder(req.cookies.jwt).id;
 
   await gridfsBucket
-    .find({ "metadata.id": id, filename: name })
+    .find({ "metadata.id": id, "metadata.info.fileName": name })
     .toArray((err, files) => {
       if (!files || files.length === 0) {
         return next(new AppError("Not found!", 404));
@@ -232,3 +232,15 @@ exports.delete = catchAsync(async (req, res, next) => {
       res.status(200).json({ status: "success" });
     });
 });
+
+exports.update = catchAsync(async (req, res, next) => {
+  const fileID = req.body.data.fileID;
+  const filename = req.body.data.metadata.filename;
+
+  const filter = { _id: mongoose.Types.ObjectId(fileID) };
+  const update = { '$set': {"metadata.info.fileName":filename } };
+  
+  await gridfsBucket.s._filesCollection.updateOne(filter,update);
+  
+  res.status(200).json({ status: "success" });
+})

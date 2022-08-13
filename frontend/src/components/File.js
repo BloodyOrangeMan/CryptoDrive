@@ -28,7 +28,7 @@ const style = {
   p: 4,
 };
 
-const Main = ({ metaData, reRender, setReRender ,keyData}) => {
+const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
   const [open, setOpen] = useState(false);
   const [newFileName, setNewFileName] = useState(metaData.filename);
   const [visible, setVisible] = useState(false);
@@ -38,8 +38,7 @@ const Main = ({ metaData, reRender, setReRender ,keyData}) => {
   const [form] = Form.useForm();
   const { Option } = Select;
 
-  useEffect( () => {
-    console.log(keyData);
+  useEffect(() => {
     setKeys(keyData);
   }, [visible]);
 
@@ -74,7 +73,7 @@ const Main = ({ metaData, reRender, setReRender ,keyData}) => {
   // HANDLE RENAME
   const handleRename = () => {
     const data = {
-      filename: metaData.filename,
+      fileID,
       metadata: {
         filename: newFileName,
         createdate: metaData.createdate,
@@ -83,23 +82,30 @@ const Main = ({ metaData, reRender, setReRender ,keyData}) => {
         type: metaData.type,
       },
     };
-    fetch(`${process.env.REACT_APP_IP}/renameBlob`, {
-      method: "PATCH",
-      withCredentials: true,
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          handleClose();
+    // fetch(`${process.env.REACT_APP_IP}/update`, {
+    //   method: "PATCH",
+    //   withCredentials: true,
+    //   credentials: "include",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(data),
+    // })
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     if (data.success) {
+    //       handleClose();
+    //       reRender ? setReRender(0) : setReRender(1);
+    //     }
+    //   })
+    //   .catch((err) => console.log(err));
+    axios.patch("/api/file/",{
+        withCredentials: true,
+        data,
+    }).then((res) =>{
+             handleClose();
           reRender ? setReRender(0) : setReRender(1);
-        }
-      })
-      .catch((err) => console.log(err));
+    })
   };
 
   const showModal = () => {

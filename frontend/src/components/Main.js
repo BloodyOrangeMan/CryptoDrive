@@ -18,7 +18,12 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
         })
         .then((res) => {
           setKeys(res.data.keys);
-        });
+        })
+        .catch((err) =>{
+          setKeys();
+          console.log(keys);
+        })
+        ;
   }, [reRender]);
 
   // State Variables
@@ -53,6 +58,7 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
                 setReRender={setReRender}
                 key={i}
                 keyData={keys} 
+                fileID={file._id}
               />
             ))
           ) : (

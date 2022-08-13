@@ -31,3 +31,12 @@ exports.getAllKey = catchAsync(async (req, res, next) => {
         keys
     })
 });
+
+exports.deleteKey = catchAsync(async (req,res,next)=>{
+    const id = jwtDecoder(req.cookies.jwt).id;
+    console.log(req.headers.id);
+    const key = await Key.findOne({_id:req.headers.id});
+    await Key.findOneAndDelete({_id:req.headers.id,user: id });
+    
+    res.status(200).json({status:"success"})
+})
