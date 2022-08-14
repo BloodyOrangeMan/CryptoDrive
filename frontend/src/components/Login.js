@@ -67,6 +67,7 @@ const Login = () => {
 			password: password
 		}).then(res => {
 			if (res.status === 200) {
+				// localStorage.setItem("psw",password)
 				history.push('/');
 			} else {
 				setIsValidated(false);

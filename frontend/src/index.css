@@ -33,11 +33,13 @@ body {
 	width: 40px;
 	margin-right: 10px;
 }
+
 .avatar {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
+
 .main-flex {
 	display: flex;
 	justify-content: center;
@@ -93,6 +95,7 @@ body {
 .list-text {
 	margin-left: 6px;
 }
+
 .main {
 	flex: 1;
 	display: grid;
@@ -108,7 +111,7 @@ body {
 
 @media screen and (min-width:768px) {
 	.main {
-		grid-template-columns: repeat(5,1fr);
+		grid-template-columns: repeat(5, 1fr);
 	}
 }
 
@@ -199,7 +202,7 @@ body {
 	font-size: 0.9rem;
 }
 
-.file-header > button {
+.file-header>button {
 	margin-left: auto;
 }
 
@@ -284,7 +287,23 @@ body {
 }
 
 .warning {
-	color:red
+	color: red
 }
 
 
+.share-file {
+	cursor: pointer;
+	margin: 10px;
+	width: 300px;
+	max-height: 260px;
+	padding: 15px;
+	display: flex;
+	flex-direction: column;
+	border-radius: 10px;
+	border: 0.5px solid #c0c0c0;
+
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+}

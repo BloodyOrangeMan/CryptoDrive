@@ -114,6 +114,8 @@ const Register = () => {
       .then((res) => {
         console.log(res.status);
         if (res.status === 201) {
+				  // localStorage.setItem("psw",password)
+
           setIsValidated(true);
           history.push("/login");
         } else {
