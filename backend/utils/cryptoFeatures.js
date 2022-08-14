@@ -60,6 +60,39 @@ exports.genSignKeyPair = async (passphrase) => {
   };
 };
 
+exports.shareEncrptStream=async (data, passphrase,sha256) => {
+  if (!sodium) await onCache;
+
+  const keyWithSalt = await initKey(
+    passphrase,
+    sodium.crypto_secretstream_xchacha20poly1305_KEYBYTES
+  );
+
+  let  key =  keyWithSalt.key;
+
+  let res = await sodium.crypto_secretstream_xchacha20poly1305_init_push(key);
+  let [state_out, header] = [res.state, res.header];
+
+  let encryptedData = await sodium.crypto_secretstream_xchacha20poly1305_push(
+    state_out,
+    data,
+    null,
+    sodium.crypto_secretstream_xchacha20poly1305_TAG_MESSAGE
+  );
+
+  let storageData = new Uint8Array(
+    encryptedData.length + sha256.length + header.length
+  );
+
+  storageData.set(sha256);
+
+  storageData.set(header, sha256.length);
+
+  storageData.set(encryptedData, sha256.length + header.length);
+  
+  return storageData;
+};
+
 exports.encryptStream = async (data, passphrase) => {
   if (!sodium) await onCache;
 
@@ -152,5 +185,13 @@ exports.openSignStream = async (sign, pk) => {
   const raw = sodium.crypto_sign_open(sign, publicKey)
 
   return raw;
-};
+}
 
+exports.sha256 = async (message) => {
+  if (!sodium) await onCache;
+  const crypto = require('crypto');
+  const hash = crypto.createHash('sha256');
+  hash.update(message);
+  const sha = hash.digest('hex');
+  return sha;
+}
