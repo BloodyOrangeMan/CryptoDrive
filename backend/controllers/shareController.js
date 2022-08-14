@@ -43,10 +43,10 @@ exports.getShareFileInfo = catchAsync(async (req, res, next) => {
   const shareInfo = await Share.findOne({ token })
   if (!shareInfo) return next(new AppError("Not found!", 404));
 
-  const { jwtid, ddl, count,filename } = shareInfo
+  const { jwtid, ddl, count, filename } = shareInfo
   try {
     await gfs1
-      .find({ "metadata.id": jwtid,filename })
+      .find({ "metadata.id": jwtid, filename })
       .toArray((err, files) => {
         if (!files || files.length === 0) {
           return next(new AppError("Not found!", 404));
@@ -71,15 +71,15 @@ exports.getShareFileInfo = catchAsync(async (req, res, next) => {
 * @author BloodyOrangeMan,cais-ou
 */
 exports.share = catchAsync(async (req, res, next) => {
-  let { password, passphrase, count, ddl} = req.body;
-  let endDay =  new Date(ddl)
+  let { password, passphrase, count, ddl } = req.body;
+  let endDay = new Date(ddl)
   let nowDay = new Date()
-  nowDay.setHours(0,0,0,0)
-  endDay.setHours(23,59,59,59)
+  nowDay.setHours(0, 0, 0, 0)
+  endDay.setHours(23, 59, 59, 59)
   let endTime = endDay.getTime() / 1000 - parseInt(nowDay.getTime() / 1000);
-  ddl = (parseInt(endTime / 60 / 60 / 24) + 1)+"d"
+  ddl = (parseInt(endTime / 60 / 60 / 24) + 1) + "d"
 
-  console.log({password, passphrase, count, ddl})
+  console.log({ password, passphrase, count, ddl })
   if (!password) {
     return next(new AppError("No password!", 404));
   }
@@ -151,7 +151,7 @@ exports.share = catchAsync(async (req, res, next) => {
         ddl,
         count,
         jwtid: id,
-        filename:name
+        filename: name
       })
       res.status(200).json({ status: "success", shareURL, key });
     });

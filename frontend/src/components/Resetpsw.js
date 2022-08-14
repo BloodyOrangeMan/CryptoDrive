@@ -85,11 +85,7 @@ const ResetPsw = () => {
 		// password regex
 		const passwordRegex =
 		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/;
-
-		const codeRegex = /^[a-zA-Z0-9_-]{4,16}$/;
-
 		
-
 		if (!code) {
 			setIsValidated(false);
 			setWarning('code must be entered!')

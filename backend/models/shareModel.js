@@ -11,14 +11,14 @@ const shareSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please!"],
   },
-  key:{
+  key: {
     type: String,
     required: [true, "Please!"],
   },
-  count:String,
-  ddl:String,
-  jwtid:String,
-  filename:String,
+  count: String,
+  ddl: String,
+  jwtid: String,
+  filename: String,
 });
 
 

@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 
-import { Button, Modal, Select, Input, Form ,InputNumber,DatePicker,message} from "antd";
+import { Button, Modal, Select, Input, Form, InputNumber, DatePicker, message } from "antd";
 import { TextField } from "@material-ui/core";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CreateIcon from "@mui/icons-material/Create";
 import ShareIcon from "@material-ui/icons/Share";
+import GppGoodIcon from '@mui/icons-material/GppGood';
 
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
@@ -14,8 +15,7 @@ import Buttonicon from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modalui from "@mui/material/Modal";
 import axios from "axios";
-import { ConsoleSqlOutlined } from "@ant-design/icons";
-import {copyText} from '../utils/publicfunc' 
+import { copyText } from '../utils/publicfunc'
 
 require("dotenv").config();
 
@@ -108,7 +108,7 @@ const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
     axios.patch("/api/file/", {
       withCredentials: true,
       data,
-    }).then((res) => {
+    }).then(() => {
       handleClose();
       reRender ? setReRender(0) : setReRender(1);
     })
@@ -161,9 +161,6 @@ const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
 
   const handleShareSubmit = (values) => {
     const filename = metaData.fileName;
-    const createdate = metaData.createDate;
-    const lastmodified = metaData.lastModified;
-    const filesize = metaData.fileSize;
     axios
       .post(`/api/share/${filename}`, {
         withCredentials: true,
@@ -171,18 +168,15 @@ const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
         key: values.key,
         sharecode: values.sharecode,
         password: values.sharecode,
-        count:values.count,
-        ddl:values.ddl.format()
+        count: values.count,
+        ddl: values.ddl.format()
       })
       .then((res) => {
         if (res.status === 200) {
           const { data } = res
-          const jwt = data.jwt;
-          const publicKey = data.publicKey;
-          const sign = data.sign;
           const url = window.location.href + data.shareURL;
           console.log(url)
-          
+
           handleCancel();
           Modal.success({
             title: 'Share',
@@ -193,10 +187,10 @@ const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
               </div>
             ),
             onOk() {
-            copyText(url);
-            message.success('链接已复制');
+              copyText(url);
+              message.success('链接已复制');
             },
-            okText:"Copy"
+            okText: "Copy"
           });
         }
       })
@@ -211,8 +205,8 @@ const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
       title: 'info',
       content: (
         <div>
-          <p>MO5：{info.md5}</p>
-          <p>sha：{info.sha}</p>
+          <p>MD5:{info.md5}</p>
+          <p>Sha256:{info.sha}</p>
         </div>
       ),
       onOk() { },
@@ -328,12 +322,12 @@ const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
             <Input.Password />
           </Form.Item>
           <Form.Item
-            name="sharecode"
-            label="Share Code"
+            name="login password"
+            label="login password"
             rules={[
               {
                 required: true,
-                message: "Please input your share code!",
+                message: "Please enter your login password!",
               },
             ]}
             hasFeedback
@@ -394,7 +388,7 @@ const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
           <ShareIcon />
         </IconButton>
         <IconButton onClick={handleShowFileInfo}>
-          <ShareIcon />
+          <GppGoodIcon />
         </IconButton>
         <IconButton onClick={handleOpen}>
           <CreateIcon />

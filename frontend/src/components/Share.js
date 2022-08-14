@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button, Modal, Select, Input, Form } from "antd";
+import { Button, Modal, Input, Form } from "antd";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import DownloadIcon from "@mui/icons-material/Download";
 import IconButton from "@mui/material/IconButton";
@@ -10,8 +10,8 @@ import { useRouteMatch } from 'react-router';
 require("dotenv").config();
 
 const Main = () => {
-  const {params:{key}} = useRouteMatch();
-  const [token,setToken] = useState(null)
+  const { params: { key } } = useRouteMatch();
+  const [token, setToken] = useState(null)
   const [state, setState] = useState({
     metaData: {
       fileName: "",
@@ -25,19 +25,19 @@ const Main = () => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    
+
     axios.get(`/api/share/info/${key}`)
-    .then(res=>{
-      const {data} = res;
-      if(data.info){
-        let fileInfo = data.info;
-        setState({
-          metaData:fileInfo
-        })
-        setToken(fileInfo.token)
-        setSharedLink(true);
-      }
-    })
+      .then(res => {
+        const { data } = res;
+        if (data.info) {
+          let fileInfo = data.info;
+          setState({
+            metaData: fileInfo
+          })
+          setToken(fileInfo.token)
+          setSharedLink(true);
+        }
+      })
   }, []);
 
   const handleModal = () => {
@@ -51,9 +51,9 @@ const Main = () => {
     setVisible(false);
   };
 
-  const showModal = () => {
-    setVisible(true);
-  };
+  // const showModal = () => {
+  //   setVisible(true);
+  // };
 
   const handleSubmit = (values) => {
     const filename = state.metaData.fileName;
@@ -85,43 +85,43 @@ const Main = () => {
 
   return (
     <>
-    {sharedLink && (
-    <div className="share-file">
-      <Modal
-        visible={visible}
-        title="ShareFile"
-        onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={handleCancel}>
-            Return
-          </Button>,
-          <Button key="submit" type="primary" onClick={form.submit}>
-            Submit
-          </Button>,
-        ]}
-      >
-        <Form
-          form={form}
-          onFinish={handleSubmit}
-          labelCol={{ span: 4 }}
-          wrapperCol={{ span: 20 }}
-          layout="horizontal"
-        >
-          <Form.Item
-            name="sharecode"
-            label="分享码"
-            rules={[
-              {
-                required: true,
-                message: "请输入分享码",
-              },
+      {sharedLink && (
+        <div className="share-file">
+          <Modal
+            visible={visible}
+            title="ShareFile"
+            onCancel={handleCancel}
+            footer={[
+              <Button key="back" onClick={handleCancel}>
+                Return
+              </Button>,
+              <Button key="submit" type="primary" onClick={form.submit}>
+                Submit
+              </Button>,
             ]}
-            hasFeedback
           >
-            <Input.Password />
-          </Form.Item>
-        </Form>
-      </Modal>
+            <Form
+              form={form}
+              onFinish={handleSubmit}
+              labelCol={{ span: 4 }}
+              wrapperCol={{ span: 20 }}
+              layout="horizontal"
+            >
+              <Form.Item
+                name="sharecode"
+                label="分享码"
+                rules={[
+                  {
+                    required: true,
+                    message: "请输入分享码",
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input.Password />
+              </Form.Item>
+            </Form>
+          </Modal>
           <div className="file-header">
             <InsertDriveFileIcon />
             <p className="file-name" title={state.metaData.fileName}>
@@ -137,14 +137,14 @@ const Main = () => {
             Last Modified: {state.metaData.lastModified} <br />
             File Size: {state.metaData.fileSize} MB
           </div>
-    </div>
-    )}
+        </div>
+      )}
 
-    {
-      !sharedLink && <>
-      <div style={{color:'red',padding:'20px'}}>you can not visit the page</div>
-      </>
-    }
+      {
+        !sharedLink && <>
+          <div style={{ color: 'red', padding: '20px' }}>you can not visit the page</div>
+        </>
+      }
     </>
   );
 };

@@ -102,8 +102,8 @@ exports.findSha = catchAsync(async (req, res, next) => {
   const id = jwtDecoder(req.cookies.jwt).id;
   const sha = await sha256(req.files.file.data);
   await gridfsBucket.find({ "metadata.id": id }).toArray((err, files) => {
-    if (files.map(shaarray => shaarray.metadata.sha).indexOf(sha) != -1 ){
-       return next(new AppError("Permission denied!", 403));
+    if (files.map(shaarray => shaarray.metadata.sha).indexOf(sha) != -1) {
+      return next(new AppError("Permission denied!", 403));
     }
     next();
   })
@@ -133,27 +133,27 @@ exports.uploadFiles = catchAsync(async (req, res, next) => {
     const bufferStream = new stream.PassThrough();
     bufferStream.end(storageData);
     bufferStream.pipe(
-    gridfsBucket.openUploadStream(name, {
+      gridfsBucket.openUploadStream(name, {
         chunkSizeBytes: size,
         contentType: mimetype,
         metadata: {
           id,
           md5,
           sha,
-              info: {
-                fileName: name,
-                createDate: new Date().toDateString(),
-                lastModified: new Date().toDateString(),
-                fileSize: (Math.round(size * Math.pow(10, -6) * 100) / 100).toFixed(
-                  3
-                ),
-                type: mimetype,
-              },
-            },
-          })
-        );
-      } 
-   res.status(200).json({ status: "success" });
+          info: {
+            fileName: name,
+            createDate: new Date().toDateString(),
+            lastModified: new Date().toDateString(),
+            fileSize: (Math.round(size * Math.pow(10, -6) * 100) / 100).toFixed(
+              3
+            ),
+            type: mimetype,
+          },
+        },
+      })
+    );
+  }
+  res.status(200).json({ status: "success" });
 });
 
 /**
@@ -189,16 +189,16 @@ exports.getAll = catchAsync(async (req, res) => {
  * @author cais-ou
  */
 exports.hashvalue = catchAsync(async (req, res, next) => {
-      const name = req.params.name;
-      const id = await jwtDecoder(req.cookies.jwt).id;
-      gridfsBucket.find({ "metadata.id": id }).toArray((err, files) => {
-      const sha256=files[0].metadata.sha;
-      if (!sha256 || sha256.length == 0) {
-        return next(new AppError('Hash value err!'), 404);
-      }
-      res.status(200).json({
-         sha256
-      })
+  const name = req.params.name;
+  const id = await jwtDecoder(req.cookies.jwt).id;
+  gridfsBucket.find({ "metadata.id": id }).toArray((err, files) => {
+    const sha256 = files[0].metadata.sha;
+    if (!sha256 || sha256.length == 0) {
+      return next(new AppError('Hash value err!'), 404);
+    }
+    res.status(200).json({
+      sha256
+    })
   });
 })
 
@@ -232,20 +232,20 @@ exports.download = catchAsync(async (req, res, next) => {
       });
 
       downloadStream = gridfsBucket.openDownloadStream(fileID);
-      
+
       let bufferArray = [];
       let resStream = new stream.PassThrough();
 
       downloadStream.on("data", function (chunk) {
         bufferArray.push(chunk);
       });
-      
+
       downloadStream.on("end", async function () {
-      let buffer = Buffer.concat(bufferArray);
-      const decrypt = await decryptStream(buffer, req.headers.passphrase);
-      
-      resStream.end(decrypt);
-      resStream.pipe(res);
+        let buffer = Buffer.concat(bufferArray);
+        const decrypt = await decryptStream(buffer, req.headers.passphrase);
+
+        resStream.end(decrypt);
+        resStream.pipe(res);
       });
     });
 });
@@ -286,11 +286,11 @@ exports.update = catchAsync(async (req, res, next) => {
   const fileID = req.body.data.fileID;
   const filename = req.body.data.metadata.filename;
 
-  const filter = {_id:mongoose.Types.ObjectId(fileID)};
-  const update = {'$set':{'metadata.info.fileName':filename}};
+  const filter = { _id: mongoose.Types.ObjectId(fileID) };
+  const update = { '$set': { 'metadata.info.fileName': filename } };
 
-  await gridfsBucket.s._filesCollection.updateOne(filter,update);
+  await gridfsBucket.s._filesCollection.updateOne(filter, update);
 
-  res.status(200).json({status:"success"});
+  res.status(200).json({ status: "success" });
 })
 

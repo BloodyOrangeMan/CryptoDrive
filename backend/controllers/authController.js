@@ -1,7 +1,7 @@
 /**
  * @file The controller used to resolve the user's authentication request
  */
-const  crypto = require("crypto")
+const crypto = require("crypto")
 const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
@@ -35,7 +35,7 @@ const createSendToken = (user, statusCode, res) => {
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
-    
+
   };
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
   res.cookie("jwt", token, cookieOptions);
