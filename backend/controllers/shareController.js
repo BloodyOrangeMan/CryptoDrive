@@ -81,7 +81,7 @@
          const user = await User.findOne({userID});
          const signData = await signStream(encryptedData, user.saltForKeyPair
           , req.headers.password);
-         console.log(user.saltForKeyPair);
+        //  console.log(user.saltForKeyPair);
          const bufferStream = new stream.PassThrough();
          bufferStream.end(signData);
          bufferStream.pipe(
