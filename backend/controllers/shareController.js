@@ -37,7 +37,13 @@ conn.once("open", () => {
   });
 });
 
-
+/**
+ * Get ShareFile Info
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @author excuses0217
+ */
 exports.getShareFileInfo = catchAsync(async (req, res, next) => {
   const { key: token } = req.params;
   const shareInfo = await Share.findOne({ token })
@@ -56,19 +62,14 @@ exports.getShareFileInfo = catchAsync(async (req, res, next) => {
   } catch (err) {
     return next(new AppError("Not found!", 404))
   }
-
-
 })
-
-
-
 
 /**
 * Share files.
 * @param {*} req
 * @param {*} res
 * @param {*} next
-* @author BloodyOrangeMan,cais-ou
+* @author BloodyOrangeMan,cais-ou,excuses0217
 */
 exports.share = catchAsync(async (req, res, next) => {
   let { password, passphrase, count, ddl } = req.body;
@@ -168,9 +169,8 @@ const signToken = (id, count, time) => {
 * @param {*} req
 * @param {*} res
 * @param {*} next
-* @author BloodyOrangeMan,cais-ou
+* @author BloodyOrangeMan,cais-ou,excuses0217
 */
-
 exports.shareDownload = catchAsync(async (req, res, next) => {
   if (req.params.token) {
     try {

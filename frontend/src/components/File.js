@@ -7,7 +7,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CreateIcon from "@mui/icons-material/Create";
 import ShareIcon from "@material-ui/icons/Share";
-import GppGoodIcon from '@mui/icons-material/GppGood';
+import TagIcon from '@mui/icons-material/Tag';
 
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
@@ -388,7 +388,7 @@ const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
           <ShareIcon />
         </IconButton>
         <IconButton onClick={handleShowFileInfo}>
-          <GppGoodIcon />
+          <TagIcon />
         </IconButton>
         <IconButton onClick={handleOpen}>
           <CreateIcon />

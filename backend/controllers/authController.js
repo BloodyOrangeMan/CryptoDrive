@@ -253,6 +253,13 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 
+/**
+ * Reset User's Password
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @author excuses0217
+ */
 exports.resetPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on the token
   const hashedToken = crypto

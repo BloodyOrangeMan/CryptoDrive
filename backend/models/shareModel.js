@@ -21,8 +21,6 @@ const shareSchema = new mongoose.Schema({
   filename: String,
 });
 
-
-
 const Share = mongoose.model("Share", shareSchema);
 
 module.exports = Share;

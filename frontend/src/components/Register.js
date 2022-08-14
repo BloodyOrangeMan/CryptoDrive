@@ -68,35 +68,29 @@ const Register = () => {
     // password regex
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
-
     const nameRegex = /^[a-zA-Z0-9_-]{4,16}$/;
 
-    // if (
-    // 	emailRegex.test(email) &&
-    // 	passwordRegex.test(password) &&
-    // 	nameRegex.test(name)
-    // ) {
-    // 	setIsValidated(true);
-    // 	postRegister(e, email, password);
-    // } else {
-    // 	setIsValidated(false);
-    // }
-
     if (!nameRegex.test(name)) {
+
       setIsValidated(false);
+
       setWarning(
         "Username must be 4 to 16 characters (letters, numbers, underscores, minus signs)!"
       );
     } else if (!emailRegex.test(email)) {
       setIsValidated(false);
+
       setWarning("Incorrect email format!");
+
     } else if (!passwordRegex.test(password)) {
       setIsValidated(false);
+
       setWarning(
         "Password should be 8 to 16 characters, at least one uppercase letter, one lowercase letter, one number and one special character!"
       );
     } else {
       setIsValidated(true);
+      
       postRegister(e, email, password);
     }
     setIsclicked(true);

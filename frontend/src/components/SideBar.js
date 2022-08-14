@@ -6,12 +6,9 @@ import { makeStyles } from "@material-ui/styles";
 import GroupIcon from "@material-ui/icons/Group";
 import ComputerIcon from "@material-ui/icons/Computer";
 import AddIcon from "@material-ui/icons/Add";
-// import Button from '@mui/material/Button';
-// import Modal from '@mui/material/Modal';
 import KeyIcon from "@mui/icons-material/Key";
 
 require("dotenv").config();
-
 
 const SideBar = ({
   sideBarOption,
@@ -50,7 +47,6 @@ const SideBar = ({
   const classes = useStyles();
   const { Option } = Select;
   
-
   const normFile = (e) => {
     console.log("Upload event:", e);
 
@@ -60,7 +56,6 @@ const SideBar = ({
 
     return e?.fileList;
   };
-
 
   const handleModal = () => {
     showModal();
@@ -111,15 +106,11 @@ const SideBar = ({
 		})
 		.catch((err) => console.log(err));
 
-   
   };
-
 
   const handleCancel = () => {
     setVisible(false);
   };
-
-
 
   const props = {
     showUploadList: true,

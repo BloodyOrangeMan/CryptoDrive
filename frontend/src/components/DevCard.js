@@ -7,7 +7,6 @@ const DevCard = ({ team }) => {
 		<div className="card">
 			<img src={team.imgUrl} alt={`Dev`} />
 			<h3>{team.name}</h3>
-
 			<div className="card-links">
 				<a href={team.githubUrl} target="_blank" rel="noreferrer">
 					<IconButton>
