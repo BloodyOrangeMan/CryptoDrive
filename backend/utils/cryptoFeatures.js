@@ -56,6 +56,7 @@ exports.genSignKeyPair = async (passphrase) => {
 
   return {
     PublicKey: pk,
+    privateKey: sk,
     salt,
   };
 };
@@ -149,8 +150,40 @@ exports.signStream = async (data, salt, passphrase) => {
 exports.openSignStream = async (sign, pk) => {
   if (!sodium) await onCache;
   const publicKey = Buffer.from(pk, 'base64'); 
-  const raw = sodium.crypto_sign_open(sign, publicKey)
+  try{
+    const raw = sodium.crypto_sign_open(sign, publicKey)
+    return raw;
+  }
+  catch(err){
+    return [];
+  }
+  
+}
+exports.genShareKeyPair = async (salt) => {
+  const {  PublicKey, salt:st, privateKey } = await this.genSignKeyPair(salt || 'use it a gen private key');
+  
+  return {
+    privateKey,
+    publicKey:PublicKey,
+    salt:st,
+  }
+}
 
-  return raw;
-};
+exports.checkOutPubShareKey = async (payload = {}) => {
+  const { shareid,publicKey,sign } = payload;
+  try{
+    const signArr = [];
+    sign && sign.split(',').map(item=>{
+      signArr.push(Number(item));
+    });
+    const raw = await this.openSignStream(new Uint8Array(signArr),publicKey);
+    return shareid == Buffer.from(raw).toString();
+  }
+  catch(err){
+    console.log(err);
+    return false;
+  }
+  
+ 
+}
 

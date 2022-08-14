@@ -11,6 +11,7 @@ const path = require("path");
 
 const authRouter = require('./routes/authRoutes');
 const fileRouter = require('./routes/fileRoutes');
+const shareFileRouter = require('./routes/shareFileRoutes');
 const keyRouter = require('./routes/keyRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -63,6 +64,7 @@ app.use((req, res, next) => {
 
 app.use('/api/', authRouter);
 app.use('/api/file', fileRouter);
+app.use('/api/sharefile', shareFileRouter);
 app.use('/api/key', keyRouter);
 
 

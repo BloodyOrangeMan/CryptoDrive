@@ -1,18 +1,19 @@
 import { useState, useEffect } from "react";
 
-import { Button, Modal, Select, Input,  Form } from "antd";
+import { Button, Modal, Select, Input, Form, message } from "antd";
 import { TextField } from "@material-ui/core";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CreateIcon from "@mui/icons-material/Create";
+import ShareIcon from "@material-ui/icons/Share";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Buttonicon from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modalui from "@mui/material/Modal";
 import axios from "axios";
-import { ConsoleSqlOutlined } from "@ant-design/icons";
+import { copyText } from "../utils/publicfunc";
 
 require("dotenv").config();
 
@@ -30,17 +31,21 @@ const style = {
 
 const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
   const [open, setOpen] = useState(false);
+  const [share, setShare] = useState(false);
   const [newFileName, setNewFileName] = useState(metaData.filename);
   const [visible, setVisible] = useState(false);
   const [keys, setKeys] = useState([]);
   const handleOpen = () => setOpen(true);
+  const handleShare = () => {
+    setShare(true);
+  };
   const handleClose = () => setOpen(false);
   const [form] = Form.useForm();
   const { Option } = Select;
 
   useEffect(() => {
     setKeys(keyData);
-  }, [visible]);
+  }, [visible,share]);
 
   const handleModal = () => {
     showModal();
@@ -48,6 +53,7 @@ const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
 
   const handleCancel = () => {
     setVisible(false);
+    setShare(false);
   };
 
   // HANDLE DELETE
@@ -112,7 +118,6 @@ const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
     setVisible(true);
   };
 
-
   const onChange = (value) => {
     console.log(`selected ${value}`);
   };
@@ -120,7 +125,36 @@ const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
   const onSearch = (value) => {
     console.log("search:", value);
   };
+  const handleShareSubmit = (values) => {
+    const filename = metaData.fileName;
+    const createdate = metaData.createDate;
+    const lastmodified = metaData.lastModified;
+    const filesize = metaData.fileSize;
 
+    axios
+      .post(`/api/sharefile/makelink/${filename}`, {
+        withCredentials: true,
+        passphrase: values.password,
+        key: values.key,
+        sharecode: values.sharecode,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          const { data } = res
+          const jwt = data.jwt;
+          const publicKey = data.publicKey;
+          const sign = data.sign;
+          const url = window.location.host + `/share/file?filename=${filename}&createdate=${createdate}
+          &lastmodified=${lastmodified}&filesize=${filesize}&jwt=${jwt}&publickey=${publicKey}&sig=${sign}`;
+          copyText(url);
+          message.success('链接已复制');
+          handleCancel();
+        }
+      })
+      .catch((error) => {
+        console.error("File could not be downloaded:", error);
+      });
+  };
   const handleSubmit = (values) => {
     console.log(values);
     const filename = metaData.fileName;
@@ -135,14 +169,14 @@ const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
         },
       })
       .then((res) => {
-		if(res.status === 200) {
-			const url = window.URL.createObjectURL(new Blob([res.data]));
-			const link = document.createElement("a");
-			link.href = url;
-			link.setAttribute("download", filename); //or any other extension
-			document.body.appendChild(link);
-			link.click();
-		}
+        if (res.status === 200) {
+          const url = window.URL.createObjectURL(new Blob([res.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", filename); //or any other extension
+          document.body.appendChild(link);
+          link.click();
+        }
       })
       .catch((error) => {
         console.error("File could not be downloaded:", error);
@@ -164,17 +198,16 @@ const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
           </Button>,
         ]}
       >
-        <Form 
-		form={form} 
-		onFinish={handleSubmit}
-		labelCol={{ span: 4 }}
-        wrapperCol={{ span: 20 }}
-        layout="horizontal"
-		>
+        <Form
+          form={form}
+          onFinish={handleSubmit}
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 20 }}
+          layout="horizontal"
+        >
           <Form.Item name="key" label="Key">
-
-            {
-              keys ? (              <Select
+            {keys ? (
+              <Select
                 showSearch
                 placeholder="Select a key"
                 optionFilterProp="children"
@@ -187,7 +220,10 @@ const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
                 {keys.map((key) => {
                   return <Option value={key._id}>{key.name}</Option>;
                 })}
-              </Select>) : (<Select></Select>)}
+              </Select>
+            ) : (
+              <Select></Select>
+            )}
           </Form.Item>
           <Form.Item
             name="password"
@@ -196,6 +232,74 @@ const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
               {
                 required: true,
                 message: "Please input your password!",
+              },
+            ]}
+            hasFeedback
+          >
+            <Input.Password />
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        visible={share}
+        title="Share"
+        onCancel={handleCancel}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Return
+          </Button>,
+          <Button key="submit" type="primary" onClick={form.submit}>
+            Submit
+          </Button>,
+        ]}
+      >
+        <Form
+          form={form}
+          onFinish={handleShareSubmit}
+          labelCol={{ span: 6 }}
+          wrapperCol={{ span: 18 }}
+          layout="horizontal"
+        >
+          <Form.Item name="key" label="Key">
+            {keys ? (
+              <Select
+                showSearch
+                placeholder="Select a key"
+                optionFilterProp="children"
+                onChange={onChange}
+                onSearch={onSearch}
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {keys.map((key) => {
+                  return <Option value={key._id}>{key.name}</Option>;
+                })}
+              </Select>
+            ) : (
+              <Select></Select>
+            )}
+          </Form.Item>
+          <Form.Item
+            name="password"
+            label="Password"
+            rules={[
+              {
+                required: true,
+                message: "Please input your password!",
+              },
+            ]}
+            hasFeedback
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            name="sharecode"
+            label="Share Code"
+            rules={[
+              {
+                required: true,
+                message: "Please input your share code!",
               },
             ]}
             hasFeedback
@@ -225,6 +329,9 @@ const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
       <div className="file-footer">
         <IconButton onClick={handleDelete}>
           <DeleteIcon />
+        </IconButton>
+        <IconButton onClick={handleShare}>
+          <ShareIcon />
         </IconButton>
         <IconButton onClick={handleOpen}>
           <CreateIcon />

@@ -14,5 +14,3 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
     }
   });
 });
-
-

@@ -187,6 +187,18 @@ body {
 	border: 0.5px solid #c0c0c0;
 }
 
+.share-file {
+	cursor: pointer;
+	margin: 10px;
+	width: 300px;
+	max-height: 260px;
+	padding: 15px;
+	display: flex;
+	flex-direction: column;
+	border-radius: 10px;
+	border: 0.5px solid #c0c0c0;
+}
+
 .file-header {
 	display: flex;
 	font-size: 1.3rem;
