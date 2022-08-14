@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Space, Table, Col, Row, Form, Input, } from "antd";
+import { Table, Col, Row, Form, Input} from "antd";
 import { Button, Modal } from "antd";
 import { KeyOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -12,22 +12,22 @@ const Key = ({ keyData, reRender, setReRender }) => {
     setVisible(true);
   };
 
-  const handleDelete = (e,record) => {
+  const handleDelete = (e, record) => {
     e.preventDefault();
     axios
-        .delete("api/key/", {
-          withCredentials: true,
-          headers:{
-            id:record.key
-          }
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            reRender ? setReRender(0) : setReRender(1);
-          }
-        }).catch((err) => {
+      .delete("api/key/", {
+        withCredentials: true,
+        headers: {
+          id: record.key
+        }
+      })
+      .then((res) => {
+        if (res.status === 200) {
           reRender ? setReRender(0) : setReRender(1);
-        });
+        }
+      }).catch((err) => {
+        reRender ? setReRender(0) : setReRender(1);
+      });
   }
 
   const handleSubmit = (values) => {
@@ -83,14 +83,14 @@ const Key = ({ keyData, reRender, setReRender }) => {
       key: "action",
       render: (_, record) => (
 
-              <a onClick={(e) => {
-                handleDelete(e, record);
-              }}>Delete</a>
+        <a onClick={(e) => {
+          handleDelete(e, record);
+        }}>Delete</a>
       ),
     },
   ];
-  
-  console.log(keyData,"test");
+
+  console.log(keyData, "test");
 
   let data = [];
   if (keyData !== undefined) {

@@ -1,18 +1,21 @@
 import { useState, useEffect } from "react";
 
-import { Button, Modal, Select, Input,  Form } from "antd";
+import { Button, Modal, Select, Input, Form, InputNumber, DatePicker, message } from "antd";
 import { TextField } from "@material-ui/core";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CreateIcon from "@mui/icons-material/Create";
+import ShareIcon from "@material-ui/icons/Share";
+import GppGoodIcon from '@mui/icons-material/GppGood';
+
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Buttonicon from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modalui from "@mui/material/Modal";
 import axios from "axios";
-import { ConsoleSqlOutlined } from "@ant-design/icons";
+import { copyText } from '../utils/publicfunc'
 
 require("dotenv").config();
 
@@ -28,8 +31,10 @@ const style = {
   p: 4,
 };
 
-const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
+const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
   const [open, setOpen] = useState(false);
+  const [share, setShare] = useState(false);
+
   const [newFileName, setNewFileName] = useState(metaData.filename);
   const [visible, setVisible] = useState(false);
   const [keys, setKeys] = useState([]);
@@ -40,7 +45,7 @@ const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
 
   useEffect(() => {
     setKeys(keyData);
-  }, [visible]);
+  }, [visible, share]);
 
   const handleModal = () => {
     showModal();
@@ -48,6 +53,7 @@ const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
 
   const handleCancel = () => {
     setVisible(false);
+    setShare(false);
   };
 
   // HANDLE DELETE
@@ -99,12 +105,12 @@ const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
     //     }
     //   })
     //   .catch((err) => console.log(err));
-    axios.patch("/api/file/",{
-        withCredentials: true,
-        data,
-    }).then((res) =>{
-             handleClose();
-          reRender ? setReRender(0) : setReRender(1);
+    axios.patch("/api/file/", {
+      withCredentials: true,
+      data,
+    }).then(() => {
+      handleClose();
+      reRender ? setReRender(0) : setReRender(1);
     })
   };
 
@@ -135,19 +141,77 @@ const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
         },
       })
       .then((res) => {
-		if(res.status === 200) {
-			const url = window.URL.createObjectURL(new Blob([res.data]));
-			const link = document.createElement("a");
-			link.href = url;
-			link.setAttribute("download", filename); //or any other extension
-			document.body.appendChild(link);
-			link.click();
-		}
+        if (res.status === 200) {
+          const url = window.URL.createObjectURL(new Blob([res.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", filename); //or any other extension
+          document.body.appendChild(link);
+          link.click();
+        }
       })
       .catch((error) => {
         console.error("File could not be downloaded:", error);
       });
   };
+
+  const handleShare = () => {
+    setShare(true);
+  };
+
+  const handleShareSubmit = (values) => {
+    const filename = metaData.fileName;
+    axios
+      .post(`/api/share/${filename}`, {
+        withCredentials: true,
+        passphrase: values.password,
+        key: values.key,
+        sharecode: values.sharecode,
+        password: values.sharecode,
+        count: values.count,
+        ddl: values.ddl.format()
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          const { data } = res
+          const url = window.location.href + data.shareURL;
+          console.log(url)
+
+          handleCancel();
+          Modal.success({
+            title: 'Share',
+            content: (
+              <div>
+                <p>分享码：{data.key}</p>
+                <p>链接：{url}</p>
+              </div>
+            ),
+            onOk() {
+              copyText(url);
+              message.success('链接已复制');
+            },
+            okText: "Copy"
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("File could not be downloaded:", error);
+      });
+  };
+
+
+  const handleShowFileInfo = () => {
+    Modal.info({
+      title: 'info',
+      content: (
+        <div>
+          <p>MD5:{info.md5}</p>
+          <p>Sha256:{info.sha}</p>
+        </div>
+      ),
+      onOk() { },
+    });
+  }
 
   return (
     <div className="file">
@@ -164,17 +228,17 @@ const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
           </Button>,
         ]}
       >
-        <Form 
-		form={form} 
-		onFinish={handleSubmit}
-		labelCol={{ span: 4 }}
-        wrapperCol={{ span: 20 }}
-        layout="horizontal"
-		>
+        <Form
+          form={form}
+          onFinish={handleSubmit}
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 20 }}
+          layout="horizontal"
+        >
           <Form.Item name="key" label="Key">
 
             {
-              keys ? (              <Select
+              keys ? (<Select
                 showSearch
                 placeholder="Select a key"
                 optionFilterProp="children"
@@ -204,6 +268,100 @@ const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
           </Form.Item>
         </Form>
       </Modal>
+      <Modal
+        visible={share}
+        title="Share"
+        onCancel={handleCancel}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Return
+          </Button>,
+          <Button key="submit" type="primary" onClick={form.submit}>
+            Submit
+          </Button>,
+        ]}
+      >
+        <Form
+          form={form}
+          onFinish={handleShareSubmit}
+          labelCol={{ span: 6 }}
+          wrapperCol={{ span: 18 }}
+          layout="horizontal"
+        >
+          <Form.Item name="key" label="Key">
+            {keys ? (
+              <Select
+                showSearch
+                placeholder="Select a key"
+                optionFilterProp="children"
+                onChange={onChange}
+                onSearch={onSearch}
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {keys.map((key) => {
+                  return <Option value={key._id}>{key.name}</Option>;
+                })}
+              </Select>
+            ) : (
+              <Select></Select>
+            )}
+          </Form.Item>
+          <Form.Item
+            name="password"
+            label="Password"
+            rules={[
+              {
+                required: true,
+                message: "Please input your password!",
+              },
+            ]}
+            hasFeedback
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            name="login password"
+            label="login password"
+            rules={[
+              {
+                required: true,
+                message: "Please enter your login password!",
+              },
+            ]}
+            hasFeedback
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            name="count"
+            label="Count"
+            rules={[
+              {
+                required: true,
+                message: "Please input your count!",
+              },
+            ]}
+            hasFeedback
+          >
+            <InputNumber />
+          </Form.Item>
+          <Form.Item
+            name="ddl"
+            label="End Date"
+            rules={[
+              {
+                required: true,
+                message: "Please select end date!",
+              },
+            ]}
+            hasFeedback
+          >
+            <DatePicker style={{ width: '50%' }} />
+          </Form.Item>
+        </Form>
+      </Modal>
       <div className="file-header">
         <InsertDriveFileIcon />
         <p className="file-name" title={metaData.fileName}>
@@ -225,6 +383,12 @@ const Main = ({ metaData, reRender, setReRender ,keyData,fileID}) => {
       <div className="file-footer">
         <IconButton onClick={handleDelete}>
           <DeleteIcon />
+        </IconButton>
+        <IconButton onClick={handleShare}>
+          <ShareIcon />
+        </IconButton>
+        <IconButton onClick={handleShowFileInfo}>
+          <GppGoodIcon />
         </IconButton>
         <IconButton onClick={handleOpen}>
           <CreateIcon />

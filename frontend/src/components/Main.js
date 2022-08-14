@@ -53,6 +53,7 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
           {files ? (
             files.map((file, i) => (
               <File
+                info={file.metadata}
                 metaData={file.metadata.info}
                 reRender={reRender}
                 setReRender={setReRender}
