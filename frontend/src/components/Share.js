@@ -6,7 +6,6 @@ import IconButton from "@mui/material/IconButton";
 import axios from "axios";
 import { useRouteMatch } from 'react-router';
 
-
 require("dotenv").config();
 
 const Main = () => {
@@ -41,19 +40,13 @@ const Main = () => {
   }, []);
 
   const handleModal = () => {
-    console.log("下载")
+    console.log("DOWNLOAD")
     window.location.href = `http://localhost:3001/api/share/download/${token}`
-    // axios.get(`/api/share/download/${token}`)
-    // showModal();
   };
 
   const handleCancel = () => {
     setVisible(false);
   };
-
-  // const showModal = () => {
-  //   setVisible(true);
-  // };
 
   const handleSubmit = (values) => {
     const filename = state.metaData.fileName;

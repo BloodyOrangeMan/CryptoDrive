@@ -3,7 +3,6 @@ const fileController = require('../controllers/fileController');
 const authController = require('./../controllers/authController');
 const router = express.Router();
 
-
 router
     .route('/')
     .post(authController.protect, fileController.checkType, fileController.checkPassphrase, fileController.findSha, fileController.uploadFiles)

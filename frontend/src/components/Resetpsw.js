@@ -147,7 +147,6 @@ const ResetPsw = () => {
                 // Recapture countdown
                 setEmailTimeout(60)
             }
-
         })
     }
     

@@ -1,4 +1,4 @@
-/** 复制文本  */
+/* Copy text */
 export function copyText(text) {
   if (document !== null) {
     const input = document.createElement("input");

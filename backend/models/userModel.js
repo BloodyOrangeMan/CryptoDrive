@@ -2,7 +2,6 @@ const crypto = require("crypto");
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
-
 const { genSignKeyPair } = require("../utils/cryptoFeatures");
 
 const userSchema = new mongoose.Schema({
