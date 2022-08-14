@@ -34,7 +34,7 @@ const Main = () => {
         jwt: decodeURIComponent(params.jwt),
       },
     });
-    // 判断是否为有效链接
+    // Determine if a link is valid
     axios
       .get("/api/isSharedLink", {
         withCredentials: true,
@@ -126,7 +126,7 @@ const Main = () => {
             rules={[
               {
                 required: true,
-                message: "请输入分享码",
+                message: "Please enter the sharing code",
               },
             ]}
             hasFeedback

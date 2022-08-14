@@ -49,7 +49,6 @@ const signToken = (id) => {
  * @param {*} req
  * @param {*} res
  * @param {*} next
- * @author BloodyOrangeMan
  */
 exports.checkType = catchAsync(async (req, res, next) => {
   let fileList = req.files.file;
@@ -91,7 +90,6 @@ exports.checkPassphrase = catchAsync(async (req, res, next) => {
     { $inc: { times: 1 } },
     { upsert: true }
   );
-
   next();
 });
 
@@ -102,7 +100,6 @@ exports.checkPassphrase = catchAsync(async (req, res, next) => {
  * @param {*} req
  * @param {*} res
  * @param {*} next
- * @author BloodyOrangeMan
  */
 exports.uploadFiles = catchAsync(async (req, res, next) => {
   const name = req.params.name;
@@ -177,7 +174,6 @@ exports.uploadFiles = catchAsync(async (req, res, next) => {
  * @param {*} req
  * @param {*} res
  * @param {*} next
- * @author BloodyOrangeMan
  */
 exports.getAll = catchAsync(async (req, res) => {
   const id = jwtDecoder(req.cookies.jwt).id;
@@ -201,7 +197,6 @@ exports.getAll = catchAsync(async (req, res) => {
  * @param {*} req
  * @param {*} res
  * @param {*} next
- * @author BloodyOrangeMan
  */
 exports.download = catchAsync(async (req, res, next) => {
   const name = req.params.name;
@@ -247,7 +242,6 @@ exports.download = catchAsync(async (req, res, next) => {
  * @param {*} req
  * @param {*} res
  * @param {*} next
- * @author BloodyOrangeMan
  */
 exports.delete = catchAsync(async (req, res, next) => {
   const name = req.params.name;
