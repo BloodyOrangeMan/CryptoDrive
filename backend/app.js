@@ -7,11 +7,11 @@ const xss = require('xss-clean');
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const fileUpload = require('express-fileupload');
-const path = require("path");
 
 const authRouter = require('./routes/authRoutes');
 const fileRouter = require('./routes/fileRoutes');
 const keyRouter = require('./routes/keyRoutes');
+const shareRouter = require('./routes/shareRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
@@ -38,7 +38,7 @@ app.use(fileUpload({
   },
   abortOnLimit: true
 }));
-
+// app.use(express.static(`${__dirname}/public`));
 
 // Limit requests from same API
 const limiter = rateLimit({
@@ -64,19 +64,11 @@ app.use((req, res, next) => {
 app.use('/api/', authRouter);
 app.use('/api/file', fileRouter);
 app.use('/api/key', keyRouter);
-
-
-app.use(express.static(path.join(__dirname, "..", "frontend","build")));
-app.use(express.static(`${__dirname}/public`));
-app.use(express.static("public"));
-app.use((req, res, next) => {
-  res.sendFile(path.join(__dirname, "..", "frontend","build", "index.html"));
-});
+app.use('/api/share',shareRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
-
 
 app.use(globalErrorHandler);
 
