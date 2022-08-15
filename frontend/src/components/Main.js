@@ -22,13 +22,21 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
         .catch((err) =>{
           setKeys();
           console.log(keys);
+        }) ;
+        axios
+        .get("/api/key/publicKey", {
+          withCredentials: true,
         })
-        ;
+        .then((res) => {
+          setPublickey(res.data.pk);
+          console.log(publickey);
+        });
   }, [reRender]);
 
   // State Variables
   const [files, setFiles] = useState();
   const [keys, setKeys] = useState();
+  const [publickey, setPublickey] = useState();
 
   // Functions
   const getFiles = () => {
@@ -81,7 +89,9 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
         <Key 
             keyData={keys} 
             reRender={reRender} 
-            setReRender={setReRender}/>
+            setReRender={setReRender}
+            pk={publickey}
+            />
             
       );
     case 2:

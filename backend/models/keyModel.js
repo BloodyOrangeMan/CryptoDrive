@@ -1,10 +1,22 @@
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 
+const passwordRegex =
+/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
+
+const nameRegex = /^[a-zA-Z0-9_-]{4,16}$/;
+
 const keySchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Please give your key a name!"],
+    validate: {
+      validator: function (el) {
+        return  nameRegex.test(el)
+      },
+      message: "name invalid!",
+    },
+
   },
   user: {
     type: mongoose.Schema.ObjectId,
@@ -17,6 +29,12 @@ const keySchema = new mongoose.Schema({
     required: [true, "Please provide a passphrase"],
     minlength: 8,
     select: false,
+    validate: {
+      validator: function (el) {
+        return  passwordRegex.test(el)
+      },
+      message: "Passwords invalid!",
+    },
   },
   passphraseConfirm: {
     type: String,

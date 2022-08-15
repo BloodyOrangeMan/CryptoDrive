@@ -14,7 +14,13 @@ const imageType = {
     bmp: "image/bmp",
     gif: "image/gif",
     svg: "image/svg+xml",
-    webp: "image/webp"
+    webp: "image/webp",
+    pdf: "application/pdf",
+    docx:"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    xls:".xls",
+    xlsx:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    doc:"application/msword"
+
  };
 const onCache = (async () => {
     await _sodium.ready;
@@ -132,38 +138,17 @@ const Share = () => {
 
     const handleFile = async (file) => {
 
-
-        const offset=0;
-
         const bufferArray=await file.arrayBuffer();
         const buffer=new Uint8Array(bufferArray);
         
-        console.log("buffer:",buffer);
         const pk = Buffer.from(publicKey, 'base64'); 
-        console.log(publicKey);
-        console.log(pk);
-        console.log("sodium:",sodium);
+
         const raw=await openSignStream(buffer,pk);
-        console.log("raw:",raw);
-        
-
-       
-        
-
-
+    
         const decryptedstream=await decryptStream(raw,verificationCode);
         saveByteArray(decryptedstream, file.name.slice(0,-4) ,file.name.slice(-7,-4));
         
 
-        console.log("filename",file.name.slice(-7,-4));
-        console.log("decryptedstream",decryptedstream);
-        // await saveByteArray(decryptedstream, 'example.txt');
-        // if(decryptedstream==undefined){
-        //     await decryptStream(raw,verificationCode);
-        //     saveByteArray(decryptedstream, 'example.txt');
-        // }
-        //console.log(buffer);
-        // Prevent upload
         return false;
     }
 

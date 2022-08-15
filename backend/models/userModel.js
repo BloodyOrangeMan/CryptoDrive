@@ -5,11 +5,23 @@ const bcrypt = require("bcryptjs");
 
 const { genSignKeyPair } = require("../utils/cryptoFeatures");
 
+// password regex
+const passwordRegex =
+/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
+
+const nameRegex = /^[a-zA-Z0-9_-]{4,16}$/;
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
     unique: true,
     required: [true, "Please tell us your name!"],
+    validate: {
+      validator: function (el) {
+        return  nameRegex.test(el)
+      },
+      message: "name invalid!",
+    },
   },
   email: {
     type: String,
@@ -23,6 +35,12 @@ const userSchema = new mongoose.Schema({
     required: [true, "Please provide a password"],
     minlength: 8,
     select: false,
+    validate: {
+      validator: function (el) {
+        return  passwordRegex.test(el)
+      },
+      message: "Passwords invalid!",
+    },
   },
   passwordConfirm: {
     type: String,

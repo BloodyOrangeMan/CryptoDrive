@@ -1,34 +1,44 @@
 import { useState } from "react";
-import { Space, Table, Col, Row, Form, Input, } from "antd";
+import { Space, Table, Col, Row, Form, Input } from "antd";
 import { Button, Modal } from "antd";
 import { KeyOutlined } from "@ant-design/icons";
 import axios from "axios";
 
-const Key = ({ keyData, reRender, setReRender }) => {
+const Key = ({ keyData, reRender, setReRender, pk }) => {
   const [visible, setVisible] = useState(false);
+  const [showPK, setShowPK] = useState(false);
   const [form] = Form.useForm();
 
   const handleClick = () => {
     setVisible(true);
   };
 
-  const handleDelete = (e,record) => {
+  const handleShow = () => {
+    setShowPK(true);
+  };
+
+  const handleShowOff = () => {
+    setShowPK(false);
+  };
+
+  const handleDelete = (e, record) => {
     e.preventDefault();
     axios
-        .delete("api/key/", {
-          withCredentials: true,
-          headers:{
-            id:record.key
-          }
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            reRender ? setReRender(0) : setReRender(1);
-          }
-        }).catch((err) => {
+      .delete("api/key/", {
+        withCredentials: true,
+        headers: {
+          id: record.key,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
           reRender ? setReRender(0) : setReRender(1);
-        });
-  }
+        }
+      })
+      .catch((err) => {
+        reRender ? setReRender(0) : setReRender(1);
+      });
+  };
 
   const handleSubmit = (values) => {
     axios
@@ -82,16 +92,17 @@ const Key = ({ keyData, reRender, setReRender }) => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-
-              <a onClick={(e) => {
-                handleDelete(e, record);
-              }}>Delete</a>
+        <a
+          onClick={(e) => {
+            handleDelete(e, record);
+          }}
+        >
+          Delete
+        </a>
       ),
     },
   ];
-  
-  console.log(keyData,"test");
-
+  console.log(pk, "test");
   let data = [];
   if (keyData !== undefined) {
     data = keyData.map((key, index) => {
@@ -193,6 +204,26 @@ const Key = ({ keyData, reRender, setReRender }) => {
             size="large"
           >
             Create A Key For Your File Encryption!
+          </Button>
+          <Modal
+            title="My publickey"
+            visible={showPK}
+            onCancel={handleShowOff}
+            footer={[
+              <Button key="back" onClick={handleShowOff}>
+                Return
+              </Button>,
+            ]}
+          >
+            <p>{pk}</p>
+          </Modal>
+          <Button
+            type="primary"
+            icon={<KeyOutlined />}
+            onClick={handleShow}
+            size="large"
+          >
+            Get my public key!
           </Button>
         </Col>
       </Row>
