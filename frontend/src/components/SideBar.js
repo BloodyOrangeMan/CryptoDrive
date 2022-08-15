@@ -101,8 +101,6 @@ const SideBar = ({
 		credentials: "include",
 		body: data,
   })
-  
-
 		.then((res) => {
 		  if (res.status === 200) {
 			reRender ? setReRender(0) : setReRender(1);
@@ -110,8 +108,6 @@ const SideBar = ({
 		  }
 		})
 		.catch((err) => console.log(err));
-
-   
   };
 
 

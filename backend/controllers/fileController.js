@@ -103,7 +103,7 @@ exports.findSha = catchAsync(async (req, res, next) => {
   const sha = await sha256(req.files.file.data);
   await gridfsBucket.find({ "metadata.id": id }).toArray((err, files) => {
     if (files.map(shaarray => shaarray.metadata.sha).indexOf(sha) != -1 ){
-       return next(new AppError("Permission denied!", 403));
+       return next(new AppError("This file already exists", 403));
     }
     next();
   })
