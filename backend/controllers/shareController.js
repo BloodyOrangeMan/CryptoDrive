@@ -37,7 +37,6 @@ conn.once("open", () => {
   });
 });
 
-
 exports.getShareFileInfo = catchAsync(async (req, res, next) => {
   const { key: token } = req.params;
   const shareInfo = await Share.findOne({ token })
@@ -59,8 +58,6 @@ exports.getShareFileInfo = catchAsync(async (req, res, next) => {
 
 
 })
-
-
 
 
 /**
@@ -86,7 +83,7 @@ exports.share = catchAsync(async (req, res, next) => {
   const name = req.params.name;
   const id = jwtDecoder(req.cookies.jwt).id;
   await gfs1
-    .find({ "metadata.id": id, filename: name })
+    .find({ "metadata.id": id, "metadata.info.fileName": name })
     .toArray(async (err, files) => {
       if (!files || files.length === 0) {
         return next(new AppError("Not found!", 404));
@@ -170,7 +167,6 @@ const signToken = (id, count, time) => {
 * @param {*} next
 * @author BloodyOrangeMan,cais-ou
 */
-
 exports.shareDownload = catchAsync(async (req, res, next) => {
   if (req.params.token) {
     try {

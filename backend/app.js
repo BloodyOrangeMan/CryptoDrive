@@ -16,7 +16,6 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
 const app = express();
-
 app.use(cookieParser());
 
 // Set security HTTP headers
@@ -38,7 +37,6 @@ app.use(fileUpload({
   },
   abortOnLimit: true
 }));
-// app.use(express.static(`${__dirname}/public`));
 
 // Limit requests from same API
 const limiter = rateLimit({
@@ -53,8 +51,6 @@ app.use(mongoSanitize());
 
 // Data sanitization against XSS
 app.use(xss());
-
-
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();

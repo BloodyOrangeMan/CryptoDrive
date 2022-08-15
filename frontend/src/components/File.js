@@ -7,6 +7,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CreateIcon from "@mui/icons-material/Create";
 import ShareIcon from "@material-ui/icons/Share";
+import TagIcon from '@mui/icons-material/Tag';
 
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
@@ -329,11 +330,11 @@ const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
           </Form.Item>
           <Form.Item
             name="sharecode"
-            label="Share Code"
+            label="Login Password"
             rules={[
               {
                 required: true,
-                message: "Please input your share code!",
+                message: "Please input your Login Password!",
               },
             ]}
             hasFeedback
@@ -394,7 +395,7 @@ const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
           <ShareIcon />
         </IconButton>
         <IconButton onClick={handleShowFileInfo}>
-          <ShareIcon />
+          <TagIcon />
         </IconButton>
         <IconButton onClick={handleOpen}>
           <CreateIcon />
