@@ -206,10 +206,8 @@ exports.shareDownload = catchAsync(async (req, res, next) => {
 
           downloadStream.on("end", async function () {
             let buffer = Buffer.concat(bufferArray);
-            const user = await User.findOne({ userID });
-            console.log(user.publicKey);
-            const decrypt = await openSignStream(buffer, user.publicKey);
-            resStream.end(decrypt);
+
+            resStream.end(buffer);
             resStream.pipe(res);
           });
           gfs2.s._filesCollection.findOneAndUpdate(
