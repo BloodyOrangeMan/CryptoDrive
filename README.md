@@ -168,7 +168,7 @@
 
 ## 视频讲解地址
 
-[视频链接](https://www.aliyundrive.com/s/JCRezzsU7Qp)
+视频正在剪辑中，视频链接请到github的README获取最新版😭
 
 
 ## 参考资料
