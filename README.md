@@ -58,7 +58,10 @@
 
 - HMAC(JWT)：数字签名生成分享链接
 
-  
+
+![FileEncryptionProcess](img/FileEncryptionProcess.png)
+
+![LinkSharing](img/LinkSharing.png)
 
 ## 快速安装与使用方法说明
 
@@ -138,18 +141,18 @@
     ```
     NODE_ENV=development
     
-
+  
     PORT=3001
-
+  
     DATABASE_LOCAL=mongodb://localhost:27017/yourdatabasename
-
+  
     JWT_SECRET=my-ultra-secure-and-ultra-long-secret
-
+  
     JWT_EXPIRES_IN=90d
-
+  
     JWT_COOKIE_EXPIRES_IN=90
     ```
- 
+
     ---
     ```bash
     ## 运行后端
