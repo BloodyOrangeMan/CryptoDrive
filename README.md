@@ -59,7 +59,7 @@
 
   
 
-<h2>快速安装与使用方法说明</h2>
+## 快速安装与使用方法说明
 
 - 在WSL2中安装MongoDB
 
@@ -135,7 +135,7 @@
 
     ```
     NODE_ENV=development
-    ```
+    
 
     PORT=3001
 
@@ -146,18 +146,19 @@
     JWT_EXPIRES_IN=90d
 
     JWT_COOKIE_EXPIRES_IN=90
-
-    ~~~cmd
+    ```
+ 
     ---
+    ```
     ## 运行后端
-    ```bash
+    bash
     npm install
     
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout cert.key -out cert.crt -config req.cnf -sha256
     
     npm start # production
     npm run dev # development
-    ~~~
+    ```
 
 - 在成功配置前后端后，访问[https://localhost:3001](https://localhost:3001)即可体验所有功能。
 
