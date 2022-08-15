@@ -67,12 +67,15 @@ exports.shareEncrptStream=async (data, passphrase,sha256) => {
     passphrase,
     sodium.crypto_secretstream_xchacha20poly1305_KEYBYTES
   );
-
-  let  key =  keyWithSalt.key;
-
+  const hash = Buffer.from(sha256,"hex");
+  let [salt, key] = [keyWithSalt.salt, keyWithSalt.key];
   let res = await sodium.crypto_secretstream_xchacha20poly1305_init_push(key);
   let [state_out, header] = [res.state, res.header];
-
+console.log(salt);
+console.log(header);
+console.log(hash);
+console.log(hash.length);
+console.log(salt.length,header.length);
   let encryptedData = await sodium.crypto_secretstream_xchacha20poly1305_push(
     state_out,
     data,
@@ -81,14 +84,16 @@ exports.shareEncrptStream=async (data, passphrase,sha256) => {
   );
 
   let storageData = new Uint8Array(
-    encryptedData.length + sha256.length + header.length
+    encryptedData.length + salt.length + header.length + hash.length
   );
 
-  storageData.set(sha256);
+  storageData.set(salt);
 
-  storageData.set(header, sha256.length);
+  storageData.set(header, salt.length);
 
-  storageData.set(encryptedData, sha256.length + header.length);
+  storageData.set(hash,salt.length+header.length)
+
+  storageData.set(encryptedData,salt.length + header.length+hash.length); 
   
   return storageData;
 };
@@ -176,6 +181,7 @@ exports.signStream = async (data, salt, passphrase) => {
   let sign = await sodium.crypto_sign(data, sk);
 
   return sign;
+
 };
 
 exports.openSignStream = async (sign, pk) => {

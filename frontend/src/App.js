@@ -4,6 +4,7 @@ import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import ResetPsw from './components/Resetpsw';
 import ShareFile from './components/Share';
+import Check from './components/Check';
 
 function App() {
 	return (
@@ -26,6 +27,9 @@ function App() {
 				{/* Dashboard Route */}
 				<Route exact path="/">
 					<Dashboard />
+				</Route>
+				<Route exact path="/check">
+					<Check />
 				</Route>
 			</Switch>
 		</Router>
