@@ -1,7 +1,7 @@
 /**
  * @file The controller used to resolve the user's authentication request
  */
-const  crypto = require("crypto")
+const crypto = require("crypto")
 const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
@@ -35,7 +35,7 @@ const createSendToken = (user, statusCode, res) => {
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
-    
+
   };
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
   res.cookie("jwt", token, cookieOptions);
@@ -236,7 +236,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     let sendMail = await nodemailer(mail);
 
-
     res.status(200).json({
       status: "success",
       message: "Token sent to email!",
@@ -253,6 +252,13 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 
+/**
+ * Reset Password
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @author excuses0217
+ */
 exports.resetPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on the token
   const hashedToken = crypto

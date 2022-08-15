@@ -10,5 +10,4 @@ router.get('/logout', authController.logout);
 router.post('/sendcode', authController.forgotPassword);
 router.post('/resetPsw', authController.resetPassword);
 
-
 module.exports = router;

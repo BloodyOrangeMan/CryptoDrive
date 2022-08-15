@@ -59,13 +59,12 @@ exports.getShareFileInfo = catchAsync(async (req, res, next) => {
 
 })
 
-
 /**
 * Share files.
 * @param {*} req
 * @param {*} res
 * @param {*} next
-* @author BloodyOrangeMan,cais-ou
+* @author BloodyOrangeMan,cais-ou,excuses0217
 */
 exports.share = catchAsync(async (req, res, next) => {
   let { password, passphrase, count, ddl} = req.body;
@@ -138,9 +137,6 @@ exports.share = catchAsync(async (req, res, next) => {
         );
       });
       const token = signToken(files[0]._id, count, ddl);
-      //    const shareURL = `${req.protocol}://${req.get(
-      //    'host'
-      //  )}/api/share/download/${token}`;
       const shareURL = `share/${token}`
       await Share.create({
         token,
@@ -165,7 +161,7 @@ const signToken = (id, count, time) => {
 * @param {*} req
 * @param {*} res
 * @param {*} next
-* @author BloodyOrangeMan,cais-ou
+* @author BloodyOrangeMan,cais-ou,excuses0217
 */
 exports.shareDownload = catchAsync(async (req, res, next) => {
   if (req.params.token) {

@@ -22,8 +22,6 @@ module.exports = function (mail) {
             }
             console.log('mail sent:', info.response);
             res({ status: "success", res: info.response })
-
         });
     })
-
 };
