@@ -95,14 +95,7 @@ const SideBar = ({
   data.append('key',values.key);
   data.append('passphrase',values.password);
   
-	  fetch(`/api/file/`, {
-		method: "POST",
-		withCredentials: true,
-		credentials: "include",
-		body: data,
-  })
-  
-
+	  axios.post(`/api/file/`, data)
 		.then((res) => {
 		  if (res.status === 200) {
 			reRender ? setReRender(0) : setReRender(1);
@@ -110,8 +103,6 @@ const SideBar = ({
 		  }
 		})
 		.catch((err) => console.log(err));
-
-   
   };
 
 

@@ -61,7 +61,7 @@ const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
   const handleDelete = () => {
     const filename = metaData.fileName;
     console.log(metaData);
-    fetch(`/api/file/${filename}`, {
+    axios.delete(`/api/file/${filename}`, {
       method: "DELETE",
       withCredentials: true,
       credentials: "include",
@@ -102,7 +102,6 @@ const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
   const showModal = () => {
     setVisible(true);
   };
-
 
   const onChange = (value) => {
     console.log(`selected ${value}`);
@@ -173,13 +172,13 @@ const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
             title: 'Share',
             content: (
               <div>
-                <p>分享码：{data.key}</p>
-                <p>链接：{url}</p>
+                <p>Share Code:{data.key}</p>
+                <p>Link:{url}</p>
               </div>
             ),
             onOk() {
-            copyText(url);
-            message.success('链接已复制');
+            copyText('Share Code:' + data.key + '    Link:' + url);
+            message.success('Link has been copied');
             },
             okText:"Copy"
           });
