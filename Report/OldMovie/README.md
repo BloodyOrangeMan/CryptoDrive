@@ -34,7 +34,7 @@ npm start
 
 ### 创建key
 
-![创建key](.\pic\create.png)
+<img src=".\pic\create.png" alt="image-20220815224440033" style="zoom:67%;" />
 
 网站前端如图
 
@@ -46,7 +46,7 @@ npm start
 
 ### 上传文件
 
-#### ![上传文件](.\pic\upload.png)
+#### <img src=".\pic\upload.png" alt="image-20220815224440033" style="zoom:67%;" />
 
 网站前端如图
 
@@ -54,7 +54,7 @@ npm start
 
 数据库存储信息如图
 
-![image-20220815224920461](.\pic\upload_database.png)
+<img src=".\pic\upload_database.png" alt="image-20220815224440033" style="zoom:67%;" />
 
 分块存储的信息如图
 
@@ -62,7 +62,7 @@ npm start
 
 ### 下载文件
 
-![下载文件](.\pic\download.png)
+<img src=".\pic\download.png" alt="image-20220815224440033" style="zoom:67%;" />
 
 网站前端如图
 
