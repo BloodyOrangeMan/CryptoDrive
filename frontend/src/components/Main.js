@@ -32,7 +32,7 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
 
   // Functions
   const getFiles = () => {
-    fetch(`api/file/`, {
+    axios.get(`api/file/`, {
       method: "GET",
       withCredentials: true,
       credentials: "include",
@@ -40,10 +40,14 @@ const Main = ({ sideBarOption, reRender, setReRender }) => {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => res.json())
-      .then((data) => {
+      .then((res) => {
+        const {data} = res
         setFiles(data.files);
-      });
+      })
+      .catch(err=>{
+        setFiles(null);
+      })
+      ;
   };
 
   switch (sideBarOption) {

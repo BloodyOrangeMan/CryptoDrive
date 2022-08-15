@@ -6,7 +6,8 @@ import App from './App';
 import axios from 'axios'
 import {message} from 'antd'
 
-// axios.defaults.baseURL = `http://127.0.0.1:3001`
+// axios.defaults.baseURL = `http://localhost:3001`
+axios.defaults.withCredentials = true // cookie
 
 
 axios.interceptors.response.use(
@@ -17,7 +18,6 @@ axios.interceptors.response.use(
         return response;
     },
     function (error) {
-
 		let msg = error?.response?.data?.message
 		message.destroy()
 		msg&&message.warn(msg)

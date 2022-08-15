@@ -61,7 +61,7 @@ const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
   const handleDelete = () => {
     const filename = metaData.fileName;
     console.log(metaData);
-    fetch(`/api/file/${filename}`, {
+    axios.delete(`/api/file/${filename}`, {
       method: "DELETE",
       withCredentials: true,
       credentials: "include",
