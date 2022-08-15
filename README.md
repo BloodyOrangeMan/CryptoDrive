@@ -1,11 +1,11 @@
-<h1 >
+<h1 align="center">
     CryptoDrive
 </h1>
 密码学加密网盘，数据库和服务器不储存明文文件。
 
 
 
-<h2> 功能清单</h2>
+## 功能清单
 
 - [x] 基于网页的用户注册与登录系统（60分）
 
@@ -48,14 +48,14 @@
   - [x] 提供静态文件的散列值下载，供下载文件完成后本地校验文件完整性 【 *散列算法* 】
 
 
-<h2>本项目用到的关键技术</h2>
+## 本项目用到的关键技术
 - xchacha20poly1305:加密文件
 
 - argon2:密钥派生
 
 - ed25519:公私钥签名
 
-- HMAC()、JWT：数字签名生成分享链接
+- HMAC(JWT)：数字签名生成分享链接
 
   
 
@@ -120,11 +120,11 @@
 
   
 
-- 运行前端（默认在3000端口打开服务）
+- 构建前端（默认在3000端口打开服务）
 
   ```cmd
   npm install 
-  npm run dev
+  npm build
   ```
 
   
@@ -159,11 +159,11 @@
     npm run dev # development
     ~~~
 
-- 在成功配置前后端后，访问[http://localhost:3000](http://localhost:3000)即可体验所有功能。
+- 在成功配置前后端后，访问[https://localhost:3001](https://localhost:3001)即可体验所有功能。
 
 
 
-<h2>视频讲解地址</h2>
+## 视频讲解地址
 
 [视频链接](https://www.aliyundrive.com/s/JCRezzsU7Qp)
 
