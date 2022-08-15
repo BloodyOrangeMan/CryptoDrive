@@ -141,15 +141,15 @@
     ```
     NODE_ENV=development
     
-  
+    
     PORT=3001
-  
+    
     DATABASE_LOCAL=mongodb://localhost:27017/yourdatabasename
-  
+    
     JWT_SECRET=my-ultra-secure-and-ultra-long-secret
-  
+    
     JWT_EXPIRES_IN=90d
-  
+    
     JWT_COOKIE_EXPIRES_IN=90
     ```
 
@@ -171,7 +171,7 @@
 
 ## 视频讲解地址
 
-视频正在剪辑中，视频链接请到github的README获取最新版😭
+[欢迎移步 BiliBili 观看演示视频](https://www.bilibili.com/video/BV1Jd4y1P7zf/?vd_source=6c64152f2266322a5f6e0772a0075314)
 
 
 ## 参考资料
