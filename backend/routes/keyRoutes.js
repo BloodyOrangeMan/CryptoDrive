@@ -9,4 +9,6 @@ router
     .get(authController.protect, keyController.getAllKey)
     .delete(authController.protect, keyController.deleteKey);
 
+router.get('/publicKey',authController.protect,keyController.getPubilckey)
+
 module.exports = router;

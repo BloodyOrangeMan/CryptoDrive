@@ -3,6 +3,7 @@ const Key = require("../models/keyModel");
 const User = require('../models/userModel');
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
+const mongoose = require("mongoose")
 
 exports.createKey = catchAsync(async (req, res, next) => {
     const id = jwtDecoder(req.cookies.jwt).id;
@@ -15,6 +16,19 @@ exports.createKey = catchAsync(async (req, res, next) => {
     });
     res.status(201).json({ status: "success" });
 });
+
+exports.getPubilckey = catchAsync(async (req, res, next) => {
+    const id = jwtDecoder(req.cookies.jwt).id;
+    const newID = mongoose.Types.ObjectId(id);
+    const user = await User.find({ "_id": newID });
+    if (!user){
+        return next(new AppError("Incorrect User", 401));
+    }
+    const pk = user[0].publicKey;
+    res.status(200).json({
+        pk
+    })
+})
 
 exports.getAllKey = catchAsync(async (req, res, next) => {
     const id = jwtDecoder(req.cookies.jwt).id;
