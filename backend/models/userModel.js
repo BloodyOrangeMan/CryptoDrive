@@ -99,7 +99,6 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
 
     return JWTTimestamp < changedTimestamp;
   }
-
   // False means NOT changed
   return false;
 };
@@ -120,5 +119,4 @@ userSchema.methods.createPasswordResetToken = function () {
 };
 
 const User = mongoose.model("User", userSchema);
-
 module.exports = User;

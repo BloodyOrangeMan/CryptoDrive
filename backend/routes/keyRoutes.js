@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
 const keyController = require("../controllers/keyController");
 const authController = require("../controllers/authController");
 

@@ -180,7 +180,6 @@ exports.getAll = catchAsync(async (req, res) => {
   });
 });
 
-
 /**
  * File hash value display.
  * @param {*} req

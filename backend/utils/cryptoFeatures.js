@@ -176,7 +176,6 @@ exports.signStream = async (data, salt, passphrase) => {
   let sign = await sodium.crypto_sign(data, sk);
 
   return sign;
-
 };
 
 exports.openSignStream = async (sign, pk) => {

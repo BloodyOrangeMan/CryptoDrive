@@ -3,7 +3,6 @@ const fileController = require('../controllers/fileController');
 const authController = require('./../controllers/authController');
 const router = express.Router();
 
-
 router
     .route('/')
     .patch(authController.protect, fileController.update)

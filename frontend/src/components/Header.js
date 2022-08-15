@@ -18,28 +18,11 @@ function Header({ userName, setIsLoggedIn }) {
 	const history = useHistory();
 
 	const handleLogout = () => {
-		// Logout Post Request
-		// fetch(`/api/logout`, {
-		// 	method: 'POST',
-		// 	withCredentials: true,
-		// 	credentials: 'include',
-		// 	headers: {
-		// 		'Content-Type': 'application/json',
-		// 	},
-		// })
-		// 	.then((res) => res.json())
-		// 	.then((data) => {
-		// 		if (data.success) {
-		// 			history.push('/login');
-		// 		}
-		// 	})
-		// 	.catch((err) => console.log(err));
 		axios.get('/api/logout').then(res => {
 			if (res.status === 200) {
 				history.push('/login');
 			} 
 		}).catch((err) => console.log(err));
-		
 	};
 
 	const classes = useStyles();

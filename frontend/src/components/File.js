@@ -89,23 +89,7 @@ const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
         type: metaData.type,
       },
     };
-    // fetch(`${process.env.REACT_APP_IP}/update`, {
-    //   method: "PATCH",
-    //   withCredentials: true,
-    //   credentials: "include",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(data),
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     if (data.success) {
-    //       handleClose();
-    //       reRender ? setReRender(0) : setReRender(1);
-    //     }
-    //   })
-    //   .catch((err) => console.log(err));
+
     axios.patch("/api/file/", {
       withCredentials: true,
       data,
@@ -209,11 +193,11 @@ const Main = ({ metaData, info, reRender, setReRender, keyData, fileID }) => {
 
   const handleShowFileInfo = () => {
     Modal.info({
-      title: 'info',
+      title: 'CHECKSUM',
       content: (
         <div>
-          <p>MO5：{info.md5}</p>
-          <p>sha：{info.sha}</p>
+          <p>MD5:{info.md5}</p>
+          <p>Sha256:{info.sha}</p>
         </div>
       ),
       onOk() { },
