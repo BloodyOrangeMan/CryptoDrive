@@ -64,7 +64,7 @@
 
 - 在WSL2中安装MongoDB
 
-  ```cmd
+  ```bash
   # 1. Open your WSL terminal (ie. Ubuntu) and go to your home directory: 
   cd ~
   # 2. Update your Ubuntu packages: 
@@ -92,7 +92,7 @@
 
 - 在WSL2中开启MongoDB服务
 
-  ```cmd
+  ```bash
   #1.  Download the init.d script for MongoDB: 
   curl https://raw.githubusercontent.com/mongodb/mongo/master/debian/init.d | sudo tee /etc/init.d/mongodb >/dev/null
   #2.  Assign that script executable permissions: 
