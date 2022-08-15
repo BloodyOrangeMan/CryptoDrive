@@ -42,7 +42,8 @@ const Main = () => {
 
   const handleModal = () => {
     console.log("下载")
-    window.location.href = `http://localhost:3001/api/share/download/${token}`
+    
+    window.location.href = `${window.location.protocol}//localhost:3001/api/share/download/${token}`
     // axios.get(`/api/share/download/${token}`)
     // showModal();
   };
