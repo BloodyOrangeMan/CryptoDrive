@@ -79,6 +79,10 @@ exports.share = catchAsync(async (req, res, next) => {
   if (!password) {
     return next(new AppError("No password!", 404));
   }
+
+
+  const randomID = crypto.randomBytes(8).toString("base64");
+
   const name = req.params.name;
   const id = jwtDecoder(req.cookies.jwt).id;
   await gfs1
@@ -121,7 +125,7 @@ exports.share = catchAsync(async (req, res, next) => {
             contentType: files[0].contentType,
             metadata: {
               id: files[0].metadata.id,
-              fileID: files[0]._id,
+              fileID: randomID,
               md5: files[0].metadata.md5,
               sha: files[0].metadata.sha,
               info: {
@@ -136,7 +140,7 @@ exports.share = catchAsync(async (req, res, next) => {
           })
         );
       });
-      const token = signToken(files[0]._id, count, ddl);
+      const token = signToken(randomID, count, ddl);
       const shareURL = `share/${token}`
       await Share.create({
         token,
@@ -171,7 +175,7 @@ exports.shareDownload = catchAsync(async (req, res, next) => {
         req.params.token,
         process.env.JWT_SECRET
       );
-      const id = mongoose.Types.ObjectId(decoded.id);
+      const id = decoded.id;
       let count;
       let fileID;
       await gfs2
