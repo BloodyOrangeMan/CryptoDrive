@@ -110,7 +110,7 @@
 
 - 安装nodejs
 
-  ```cmd
+  ```bash
   sudo apt-get install curl
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
   nvm install --lts
@@ -123,7 +123,8 @@
 
 - 构建前端（默认在3000端口打开服务）
 
-  ```cmd
+  ```bash
+  cd frontend
   npm install 
   npm build
   ```
@@ -150,9 +151,9 @@
     ```
  
     ---
-    ```
+    ```bash
     ## 运行后端
-    bash
+    cd backend
     npm install
     
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout cert.key -out cert.crt -config req.cnf -sha256
