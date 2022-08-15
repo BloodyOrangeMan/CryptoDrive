@@ -1,8 +1,11 @@
-<h1 align="center">
+<h1 >
     CryptoDrive
 </h1>
+密码学加密网盘，数据库和服务器不储存明文文件。
 
-## 完成进度
+
+
+<h2> 功能清单</h2>
 
 - [x] 基于网页的用户注册与登录系统（60分）
 
@@ -24,18 +27,6 @@
 
   - [x] （可选）安全的忘记口令 / 找回密码功能
 
-  - [ ] （可选）微信/微博/支付宝的OAuth授权登录 / 注册绑定
-
-  - [ ] （可选）双因素认证
-
-    - OTP: Google Authenticator
-
-    - Email
-
-    - SMS
-
-    - 扫码登录
-
 - [x] 基于网页的文件上传加密与数字签名系统（20分）
 
   - [x] 已完成《基于网页的用户注册与登录系统》所有要求
@@ -55,6 +46,124 @@
   - [x] 提供已登录用户解密后文件下载
   - [x] 下载URL设置有效期（限制时间或限制下载次数），过期后禁止访问 【 *数字签名* *消息认证码* *Hash Extension Length Attack* *Hash算法与HMAC算法的区别与联系* 】
   - [x] 提供静态文件的散列值下载，供下载文件完成后本地校验文件完整性 【 *散列算法* 】
+
+
+<h2>本项目用到的关键技术</h2>
+- xchacha20poly1305:加密文件
+
+- argon2:密钥派生
+
+- ed25519:公私钥签名
+
+- HMAC()、JWT：数字签名生成分享链接
+
+  
+
+<h2>快速安装与使用方法说明</h2>
+
+- 在WSL2中安装MongoDB
+
+  ```cmd
+  # 1. Open your WSL terminal (ie. Ubuntu) and go to your home directory: 
+  cd ~
+  # 2. Update your Ubuntu packages: 
+  sudo apt update
+  #3.  Import the public key used by the MongoDB package management system: 
+  wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
+  #4.  Create a list file for MongoDB: 
+  echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+  #5.  Reload local package database: 
+  sudo apt-get update
+  #6.  Install MongoDB packages: 
+  sudo apt-get install -y mongodb-org
+  #7.  Confirm installation and get the version number: 
+  mongod --version
+  #8.  Make a directory to store data: 
+  mkdir -p ~/data/db
+  #9.  Run a Mongo instance: 
+  sudo mongod --dbpath ~/data/db
+  #10.  Check to see that your MongoDB instance is running with: 
+  ps -e | grep 'mongod'
+  #11.  To exit the MongoDB Shell, use the shortcut keys: Ctrl + C
+  ```
+
+  
+
+- 在WSL2中开启MongoDB服务
+
+  ```cmd
+  #1.  Download the init.d script for MongoDB: 
+  curl https://raw.githubusercontent.com/mongodb/mongo/master/debian/init.d | sudo tee /etc/init.d/mongodb >/dev/null
+  #2.  Assign that script executable permissions: 
+  sudo chmod +x /etc/init.d/mongodb
+  #3.  Now you can use MongoDB service commands:
+    sudo service mongodb status 
+    #for checking the status of your database. You should see a [Fail] response if no database is running.
+    sudo service mongodb start 
+    #to start running your database. You should see a [Ok] response.
+    sudo service mongodb stop 
+    #to stop running your database.
+  ```
+
+  
+
+- 安装nodejs
+
+  ```cmd
+  sudo apt-get install curl
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+  nvm install --lts
+  node --version
+  npm --version
+  nvm use --lts
+  ```
+
+  
+
+- 运行前端（默认在3000端口打开服务）
+
+  ```cmd
+  npm install 
+  npm run dev
+  ```
+
+  
+
+- 运行后端
+
+  - 修改`config.env`参数
+
+    ```
+    NODE_ENV=development
+    ```
+
+    PORT=3001
+
+    DATABASE_LOCAL=mongodb://localhost:27017/yourdatabasename
+
+    JWT_SECRET=my-ultra-secure-and-ultra-long-secret
+
+    JWT_EXPIRES_IN=90d
+
+    JWT_COOKIE_EXPIRES_IN=90
+
+    ~~~cmd
+    ---
+    ## 运行后端
+    ```bash
+    npm install
+    
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout cert.key -out cert.crt -config req.cnf -sha256
+    
+    npm start # production
+    npm run dev # development
+    ~~~
+
+- 在成功配置前后端后，访问[http://localhost:3000](http://localhost:3000)即可体验所有功能。
+
+
+
+<h2>视频讲解地址</h2>
 
 ## 参考资料
 
