@@ -269,7 +269,7 @@ exports.delete = catchAsync(async (req, res, next) => {
   const id = await jwtDecoder(req.cookies.jwt).id;
 
   await gridfsBucket
-    .find({ "metadata.id": id, filename: name })
+    .find({ "metadata.id": id, "metadata.info.fileName": name })
     .toArray((err, files) => {
       if (!files || files.length === 0) {
         return next(new AppError("Not found!", 404));

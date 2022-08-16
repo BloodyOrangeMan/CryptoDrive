@@ -44,7 +44,7 @@ exports.getShareFileInfo = catchAsync(async (req, res, next) => {
 
   const { jwtid, ddl, count,filename } = shareInfo
   try {
-    await gfs1
+    await gfs2
       .find({ "metadata.id": jwtid,filename })
       .toArray((err, files) => {
         if (!files || files.length === 0) {
